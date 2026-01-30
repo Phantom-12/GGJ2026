@@ -7,8 +7,7 @@ public class AnimationManager : MonoBehaviour
     public static AnimationManager Instance;
 
     public Vector3 originalPosition;
-
-    public float animationDuration = 1.0f;
+    public float itemAnimationDuration = 0.4f;
 
     // Start is called before the first frame update
     public void Start()
@@ -22,11 +21,5 @@ public class AnimationManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
