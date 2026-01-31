@@ -7,18 +7,18 @@ using UnityEngine.UI;
 public class Progress : MonoBehaviour
 {
     public GameObject customerPrefab;
-    private Item itemScript => GameManager.Instance.item;
     private List<GameObject> customerPool = new();
     private Queue<GameObject> customerQueue = new();
+    public List<string> customerNames = new();
     public int stepsToBooth = 7, stepsToLeave = 10;
     private int totalProgress = 5;
-
     public void InitProgress(int progress)
     {
         totalProgress = Mathf.Clamp(progress, 0, totalProgress);
         for (int i = customerPool.Count; i < totalProgress; i++)
         {
             GameObject customer = Instantiate(customerPrefab, transform);
+            Customer customerScript = customer.GetComponent<Customer>();
             customer.SetActive(false);
             customer.transform.position = new Vector3(-100, 0, 0);
             customerPool.Add(customer);
@@ -33,6 +33,8 @@ public class Progress : MonoBehaviour
             GameObject customer = customerPool.Find(c => !c.activeSelf);
             if (customer != null)
             {
+                Customer customerScript = customer.GetComponent<Customer>();
+                customerScript.customerName = customerNames[Random.Range(0, customerNames.Count)];
                 customer.SetActive(true);
                 customer.transform.position = new Vector3(-100, 0, 0);
                 customerQueue.Enqueue(customer);
@@ -40,12 +42,21 @@ public class Progress : MonoBehaviour
             yield return new WaitForSeconds(Random.Range(0.2f, 0.5f));
             StartCustomerJumpRoutine(customer, 1, stepsToBooth - i);
         }
-        AnimationManager.Instance.ItemSlideInAnimation();
+        GameManager.Instance.StartFirstRound();
+    }
+
+    public string GetNameOfFirstCustomer()
+    {
+        if (customerQueue.Count == 0) return "";
+        GameObject customer = customerQueue.Peek();
+        Customer customerScript = customer.GetComponent<Customer>();
+        return customerScript.customerName;
     }
 
     public void CustomerLeave()
     {
         if (customerQueue.Count == 0) return;
+        AnimationManager.Instance.ItemSlideOutAnimation();
         GameObject customer = customerQueue.Dequeue();
         StartCoroutine(CustomerLeaveCoroutine(customer));
         StartCoroutine(QueueCustomerCoroutine());

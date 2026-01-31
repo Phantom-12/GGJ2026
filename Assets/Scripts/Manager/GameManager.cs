@@ -7,7 +7,6 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public Progress progress;
-    public Item item;
     public Text timeText, scoreText;
     public Text finalScoreText;
     public int customerCount = 5;
@@ -38,6 +37,47 @@ public class GameManager : MonoBehaviour
         progress.InitProgress(customerCount);
     }
 
+    public void GameOver()
+    {
+        StopAllCoroutines();
+        finalScoreText.text = $"Final Score\n{score}";
+    }
+
+    public void StartFirstRound()
+    {
+        string itemName = progress.GetNameOfFirstCustomer();
+        ItemManager.Instance.SetItemName(itemName);
+
+        GameObject itemObject = ItemManager.Instance.GetAvailableItemObject();
+        Item itemScript = itemObject.GetComponent<Item>();
+        itemScript.Init();
+        
+        AnimationManager.Instance.ItemSlideInAnimation();
+    }
+
+    // 完成贴膜后进行下一轮
+    public void StartNextRound()
+    {
+        progress.CustomerLeave();
+
+        AnimationManager.Instance.ItemSlideOutAnimation();
+
+        string itemName = progress.GetNameOfFirstCustomer();
+        ItemManager.Instance.SetItemName(itemName);
+
+        GameObject itemObject = ItemManager.Instance.GetAvailableItemObject();
+        Item itemScript = itemObject.GetComponent<Item>();
+        itemScript.Init();
+        
+        AnimationManager.Instance.ItemSlideInAnimation();
+    }
+
+    /* TODO: 将膜放下，并计分的函数 */
+    public void PutMaskDown()
+    {
+        
+    }
+
     public void AddScore(int amount)
     {
         score += amount;
@@ -50,7 +90,7 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(1f);
             time++;
-            timeText.text = $"Time {time/3600:D2}:{(time/60)%60:D2}:{time%60:D2}";
+            timeText.text = $"Time {time/3600:D2}:{time/60%60:D2}:{time%60:D2}";
         }
     }
 

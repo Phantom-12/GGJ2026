@@ -4,8 +4,12 @@ using UnityEngine;
 public class ItemManager : MonoBehaviour
 {
     public static ItemManager Instance;
+
+    public GameObject item1, item2;
     public Dictionary<string, Sprite> specialItemSprites = new();
     public List<Sprite> commonItemSprites = new();
+
+    public string currentItemName = "";
 
     public void Start()
     {
@@ -23,32 +27,42 @@ public class ItemManager : MonoBehaviour
 
     void LoadSprites()
     {
-        // Load special item sprites
         Sprite[] loadedSpecialSprites = Resources.LoadAll<Sprite>("Sprites/Items/Special");
         foreach (Sprite sprite in loadedSpecialSprites)
         {
             specialItemSprites[sprite.name] = sprite;
         }
 
-        // Load common item sprites
         Sprite[] loadedCommonSprites = Resources.LoadAll<Sprite>("Sprites/Items/Common");
         commonItemSprites.AddRange(loadedCommonSprites);
     }
 
-    public Sprite GetRandomCommonItemSprite()
+    public GameObject GetAvailableItemObject()
     {
-        if (commonItemSprites.Count == 0) return null;
-        int index = Random.Range(0, commonItemSprites.Count);
-        return commonItemSprites[index];
+        if (!item1.activeSelf) return item1;
+        if (!item2.activeSelf) return item2;
+        return null;
     }
 
-    public Sprite GetSpecialItemSprite(string itemName)
+    public GameObject GetCurrentItemObject()
     {
-        if (string.IsNullOrEmpty(itemName)) return null;
-        if (specialItemSprites.ContainsKey(itemName))
-        {
-            return specialItemSprites[itemName];
-        }
+        if (item1.activeSelf) return item1;
+        if (item2.activeSelf) return item2;
         return null;
+    }
+
+
+    public void SetItemName(string name)
+    {
+        currentItemName = name;
+    }
+
+    public Sprite GetItemSprite()
+    {
+        if (specialItemSprites.ContainsKey(currentItemName))
+        {
+            return specialItemSprites[currentItemName];
+        }
+        return commonItemSprites[Random.Range(0, commonItemSprites.Count)];
     }
 }

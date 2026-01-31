@@ -5,14 +5,12 @@ using UnityEngine;
 public class AnimationManager : MonoBehaviour
 {
     public static AnimationManager Instance;
-
     public Animator startCanvasAnimator, endCanvasAnimator;
     public GameObject infoCanvas;
-    public GameObject item;
     public Vector3 originalPosition;
     public float itemAnimationDuration = 0.4f;
+    private GameObject item;
 
-    // Start is called before the first frame update
     public void Start()
     {
         if (Instance == null)
@@ -26,8 +24,19 @@ public class AnimationManager : MonoBehaviour
         }
     }
 
+    public void ShowInfoCanvas()
+    {
+        infoCanvas.SetActive(true);
+    }
+
+    public void HideInfoCanvas()
+    {
+        infoCanvas.SetActive(false);
+    }
+
     public void ItemSlideInAnimation()
     {
+        item = ItemManager.Instance.GetAvailableItemObject();
         Item itemScript = item.GetComponent<Item>();
         if (itemScript != null)
         {
@@ -35,15 +44,25 @@ public class AnimationManager : MonoBehaviour
         }
     }
 
+    public void ItemSlideOutAnimation()
+    {
+        item = ItemManager.Instance.GetCurrentItemObject();
+        Item itemScript = item.GetComponent<Item>();
+        if (itemScript != null)
+        {
+            itemScript.SlideOut();
+        }
+    }
+
     public void StartGameAnimation()
     {
         startCanvasAnimator.SetTrigger("Hide");
-        infoCanvas.SetActive(true);
+        ShowInfoCanvas();
     }
 
     public void GameOverAnimation()
     {
-        infoCanvas.SetActive(false);
         endCanvasAnimator.SetTrigger("Show");
+        HideInfoCanvas();
     }
 }

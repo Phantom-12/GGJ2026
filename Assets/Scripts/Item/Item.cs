@@ -15,13 +15,9 @@ public class Item : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    public void Init(string spriteName = "")
+    public void Init()
     {
-        Sprite newSprite = ItemManager.Instance.GetSpecialItemSprite(spriteName);
-        if (newSprite == null)
-        {
-            newSprite = ItemManager.Instance.GetRandomCommonItemSprite();
-        }
+        Sprite newSprite = ItemManager.Instance.GetItemSprite();
         spriteRenderer.sprite = newSprite;
         transform.position = new Vector3(startPosition.x, startPosition.y, 0);
     }
@@ -29,16 +25,29 @@ public class Item : MonoBehaviour
     public void SlideIn()
     {
         targetPosition = AnimationManager.Instance.originalPosition;
-        StartCoroutine(Slide());
+        StartCoroutine(SlideInRoutine());
     }
 
     public void SlideOut()
     {
         targetPosition = transform.position + new Vector3(slideOutOffset, 0, 0);
-        StartCoroutine(Slide());
+        StartCoroutine(SlideOutRoutine());
     }
 
-    IEnumerator Slide()
+    IEnumerator SlideInRoutine()
+    {
+        gameObject.SetActive(true);
+        float elapsedTime = 0f;
+        float duration = AnimationManager.Instance.itemAnimationDuration;
+        while (elapsedTime < duration)
+        {
+            yield return null;
+            elapsedTime += Time.deltaTime;
+            transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
+        }
+    }
+
+    IEnumerator SlideOutRoutine()
     {
         float elapsedTime = 0f;
         float duration = AnimationManager.Instance.itemAnimationDuration;
@@ -48,5 +57,6 @@ public class Item : MonoBehaviour
             elapsedTime += Time.deltaTime;
             transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
         }
+        gameObject.SetActive(false);
     }
 }

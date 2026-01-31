@@ -4,6 +4,9 @@ using System.Collections;
 
 public class Customer : MonoBehaviour
 {
+    [Header("Data")]
+    public string customerName;
+
 	[Header("Jump Settings")]
 	[SerializeField] private float jumpDistance = 200f;
 	[SerializeField] private float jumpHeight = 60f;
@@ -12,11 +15,26 @@ public class Customer : MonoBehaviour
 	private RectTransform rectTransform;
 	private Coroutine jumpRoutine;
     public bool isJumping => jumpRoutine != null;
+    private Image customerImage;
 
 	private void Awake()
 	{
 		rectTransform = GetComponent<RectTransform>();
+        customerImage = GetComponent<Image>();
 	}
+
+    public void SetCustomerName(string name)
+    {
+        customerName = name;
+        Sprite customerSprite = Resources.Load<Sprite>($"Sprites/Customers/{name}");
+        if (customerSprite == null){
+            customerSprite = Resources.Load<Sprite>($"Sprites/Customers/default");
+        }
+        if (customerImage != null)
+        {
+            customerImage.sprite = customerSprite;
+        }
+    }
 
 	public void Jump(bool toRight = true)
 	{
