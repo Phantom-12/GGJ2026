@@ -4,9 +4,22 @@ using UnityEngine;
 
 public class AnimationController : MonoBehaviour
 {
-    public Vector3 originalPosition;
+    public Vector3 startPosition;
     public float offsetY = 10f;
+    public SpriteRenderer spriteRenderer;
     private Vector3 targetPosition;
+
+    public void Awake()
+    {
+        startPosition = transform.position;
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    public void SetSprite(Sprite newSprite)
+    {
+        spriteRenderer.sprite = newSprite;
+        transform.position = new Vector3(startPosition.x, startPosition.y + offsetY, 0);
+    }
     
     public void SlideIn()
     {
@@ -16,7 +29,7 @@ public class AnimationController : MonoBehaviour
 
     public void SlideOut()
     {
-        targetPosition = new Vector3(originalPosition.x, originalPosition.y + offsetY, originalPosition.z);
+        targetPosition = new Vector3(transform.position.x, startPosition.y + offsetY, 0);
         StartCoroutine(Slide());
     }
 
@@ -28,7 +41,7 @@ public class AnimationController : MonoBehaviour
         {
             yield return null;
             elapsedTime += Time.deltaTime;
-            transform.position = Vector3.Lerp(originalPosition, targetPosition, elapsedTime / duration);
+            transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
         }
     }
 }
