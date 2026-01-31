@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AnimationManager : MonoBehaviour
 {
     public static AnimationManager Instance;
-    public Animator startCanvasAnimator, endCanvasAnimator;
-    public GameObject infoCanvas;
+    public Animator startCanvasAnimator, infoCanvasAnimator, endCanvasAnimator, catAnimator;
+
+    public Text scoreAddition;
     public Vector3 originalPosition;
     public float itemAnimationDuration = 0.4f;
     private GameObject item;
@@ -26,12 +28,12 @@ public class AnimationManager : MonoBehaviour
 
     public void ShowInfoCanvas()
     {
-        infoCanvas.SetActive(true);
+        infoCanvasAnimator.SetTrigger("Show");
     }
 
     public void HideInfoCanvas()
     {
-        infoCanvas.SetActive(false);
+        infoCanvasAnimator.SetTrigger("Hide");
     }
 
     public void ItemSlideInAnimation()
@@ -54,6 +56,30 @@ public class AnimationManager : MonoBehaviour
         }
     }
 
+    public void ScoreAdditionAnimation(int addition)
+    {
+        scoreAddition.text = "+" + addition.ToString();
+        StartCoroutine(ScoreAdditionRoutine(addition));
+    }
+
+    IEnumerator ScoreAdditionRoutine(int addition)
+    {
+        RectTransform scoreAdditionRect = scoreAddition.GetComponent<RectTransform>();
+        scoreAdditionRect.anchoredPosition = new Vector3(0, -160, 0);
+        CanvasGroup canvasGroup = scoreAddition.GetComponent<CanvasGroup>();
+        canvasGroup.alpha = 1f;
+        yield return new WaitForSeconds(0.5f);
+        
+        while (canvasGroup.alpha > 0f && Vector3.Distance(scoreAdditionRect.anchoredPosition, Vector3.zero) > 0.01f)
+        {
+            scoreAdditionRect.anchoredPosition = Vector3.Lerp(scoreAdditionRect.anchoredPosition, Vector3.zero, Time.deltaTime * 2f);
+            canvasGroup.alpha -= Time.deltaTime * 2f;
+            yield return null;
+        }
+
+        GameManager.Instance.AddScore(addition);
+    }
+
     public void StartGameAnimation()
     {
         startCanvasAnimator.SetTrigger("Hide");
@@ -64,5 +90,17 @@ public class AnimationManager : MonoBehaviour
     {
         endCanvasAnimator.SetTrigger("Show");
         HideInfoCanvas();
+    }
+
+    public void ChangeCatMood(int resultCode)
+    {   
+        catAnimator.SetBool("Working", false);
+        catAnimator.SetInteger("Result", resultCode);
+    }
+
+    public void CatStartWorking()
+    {
+        catAnimator.SetTrigger("Idle");
+        catAnimator.SetBool("Working", true);
     }
 }

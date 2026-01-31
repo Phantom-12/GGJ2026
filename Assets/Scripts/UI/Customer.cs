@@ -5,7 +5,7 @@ using System.Collections;
 public class Customer : MonoBehaviour
 {
     [Header("Data")]
-    public string customerName;
+    [SerializeField] private string customerName;
 
 	[Header("Jump Settings")]
 	[SerializeField] private float jumpDistance = 200f;
@@ -23,17 +23,18 @@ public class Customer : MonoBehaviour
         customerImage = GetComponent<Image>();
 	}
 
-    public void SetCustomerName(string name)
+    public string GetCustomerName()
     {
-        customerName = name;
-        Sprite customerSprite = Resources.Load<Sprite>($"Sprites/Customers/{name}");
-        if (customerSprite == null){
-            customerSprite = Resources.Load<Sprite>($"Sprites/Customers/default");
-        }
+        return customerName;
+    }
+
+    public void SetCustomerSprite(Sprite sprite)
+    {
         if (customerImage != null)
         {
-            customerImage.sprite = customerSprite;
+            customerImage.sprite = sprite;
         }
+        customerName = sprite.name;
     }
 
 	public void Jump(bool toRight = true)

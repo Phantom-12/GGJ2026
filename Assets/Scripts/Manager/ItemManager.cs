@@ -8,7 +8,6 @@ public class ItemManager : MonoBehaviour
     public GameObject item1, item2;
     public Dictionary<string, Sprite> specialItemSprites = new();
     public List<Sprite> commonItemSprites = new();
-
     public string currentItemName = "";
 
     public void Start()

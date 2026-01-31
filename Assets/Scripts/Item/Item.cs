@@ -45,6 +45,7 @@ public class Item : MonoBehaviour
             elapsedTime += Time.deltaTime;
             transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
         }
+        AnimationManager.Instance.CatStartWorking();
     }
 
     IEnumerator SlideOutRoutine()

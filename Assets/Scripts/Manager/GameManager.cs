@@ -6,10 +6,10 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    public Progress progress;
+    public CustomerQueue queue;
+    public int totalTime = 600;
     public Text timeText, scoreText;
     public Text finalScoreText;
-    public int customerCount = 5;
     int time = 0, score = 0;
     // Start is called before the first frame update
     public void Start()
@@ -34,18 +34,19 @@ public class GameManager : MonoBehaviour
         scoreText.text = "Score 0";
         StopAllCoroutines();
         StartCoroutine(Timer());
-        progress.InitProgress(customerCount);
+        queue.Init();
     }
 
     public void GameOver()
     {
         StopAllCoroutines();
         finalScoreText.text = $"Final Score\n{score}";
+        AnimationManager.Instance.GameOverAnimation();
     }
 
     public void StartFirstRound()
     {
-        string itemName = progress.GetNameOfFirstCustomer();
+        string itemName = queue.GetNameOfFirstCustomer();
         ItemManager.Instance.SetItemName(itemName);
 
         GameObject itemObject = ItemManager.Instance.GetAvailableItemObject();
@@ -58,11 +59,11 @@ public class GameManager : MonoBehaviour
     // 完成贴膜后进行下一轮
     public void StartNextRound()
     {
-        progress.CustomerLeave();
+        queue.CustomerLeave();
 
         AnimationManager.Instance.ItemSlideOutAnimation();
 
-        string itemName = progress.GetNameOfFirstCustomer();
+        string itemName = queue.GetNameOfFirstCustomer();
         ItemManager.Instance.SetItemName(itemName);
 
         GameObject itemObject = ItemManager.Instance.GetAvailableItemObject();
@@ -86,12 +87,14 @@ public class GameManager : MonoBehaviour
 
     IEnumerator Timer()
     {
-        while (true)
+        time = totalTime;
+        while (time > 0)
         {
             yield return new WaitForSeconds(1f);
-            time++;
+            time--;
             timeText.text = $"Time {time/3600:D2}:{time/60%60:D2}:{time%60:D2}";
         }
+        GameOver();
     }
 
     public void ExitGame()
