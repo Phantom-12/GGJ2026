@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimationController : MonoBehaviour
+public class Item : MonoBehaviour
 {
     public Vector3 startPosition;
     public float offsetY = 10f;
@@ -15,7 +15,7 @@ public class AnimationController : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    public void SetSprite(Sprite newSprite)
+    public void Init(Sprite newSprite)
     {
         spriteRenderer.sprite = newSprite;
         transform.position = new Vector3(startPosition.x, startPosition.y + offsetY, 0);

@@ -7,7 +7,6 @@ public class AnimationManager : MonoBehaviour
     public static AnimationManager Instance;
 
     public GameObject item;
-
     public Vector3 originalPosition;
     public float itemAnimationDuration = 0.4f;
 
@@ -22,6 +21,16 @@ public class AnimationManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+        }
+    }
+
+    public void StartItemAnimation()
+    {
+        Item itemScript = item.GetComponent<Item>();
+        itemScript.Init(item.GetComponent<SpriteRenderer>().sprite);
+        if (itemScript != null)
+        {
+            itemScript.SlideIn();
         }
     }
 }

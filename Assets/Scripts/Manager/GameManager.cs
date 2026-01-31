@@ -2,11 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    public TextMeshProUGUI timeText, scoreText;
+    public Progress progress;
+    public Text timeText, scoreText;
+    public int customerCount = 5;
     int time = 0, score = 0;
     // Start is called before the first frame update
     public void Start()
@@ -21,6 +24,8 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
             Instance.Start();
         }
+
+        StartGame();
     }
 
     public void StartGame()
@@ -28,15 +33,17 @@ public class GameManager : MonoBehaviour
         time = 0;
         score = 0;
         timeText.text = "Time 00:00:00";
-        scoreText.text = "Score: 0";
+        scoreText.text = "Score 0";
         StopAllCoroutines();
         StartCoroutine(Timer());
+        progress.InitProgress(customerCount);
+        AnimationManager.Instance.StartItemAnimation();
     }
 
     public void AddScore(int amount)
     {
         score += amount;
-        scoreText.text = $"Score: {score}";
+        scoreText.text = $"Score {score}";
     }
 
     IEnumerator Timer()
