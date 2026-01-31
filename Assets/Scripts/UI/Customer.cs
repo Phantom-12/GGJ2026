@@ -6,6 +6,7 @@ public class Customer : MonoBehaviour
 {
     [Header("Data")]
     [SerializeField] private string customerName;
+    [SerializeField] public bool isSpecial = false;
 
 	[Header("Jump Settings")]
 	[SerializeField] private float jumpDistance = 200f;

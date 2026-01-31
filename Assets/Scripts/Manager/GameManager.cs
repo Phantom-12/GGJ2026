@@ -59,9 +59,14 @@ public class GameManager : MonoBehaviour
 
     public void StartFirstRound()
     {
-        string itemName = queue.GetNameOfFirstCustomer();
-        ItemManager.Instance.SetItemName(itemName);
-
+        if(queue.IsFirstCustomerSpecial())
+        {
+            ItemManager.Instance.SetCurrentItemName(queue.GetNameOfFirstCustomer());
+        } else
+        {
+            ItemManager.Instance.SetCurrentItemName("");
+        }
+        
         GameObject itemObject = ItemManager.Instance.GetAvailableItemObject();
         Item itemScript = itemObject.GetComponent<Item>();
         itemScript.Init();
@@ -76,8 +81,13 @@ public class GameManager : MonoBehaviour
 
         AnimationManager.Instance.ItemSlideOutAnimation();
 
-        string itemName = queue.GetNameOfFirstCustomer();
-        ItemManager.Instance.SetItemName(itemName);
+        if(queue.IsFirstCustomerSpecial())
+        {
+            ItemManager.Instance.SetCurrentItemName(queue.GetNameOfFirstCustomer());
+        } else
+        {
+            ItemManager.Instance.SetCurrentItemName("");
+        }
 
         GameObject itemObject = ItemManager.Instance.GetAvailableItemObject();
         Item itemScript = itemObject.GetComponent<Item>();

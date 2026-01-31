@@ -43,6 +43,11 @@ public class ItemManager : MonoBehaviour
         }
     }
 
+    public void SetCurrentItemName(string itemName)
+    {
+        currentItemName = itemName;
+    }
+
     public GameObject GetAvailableItemObject()
     {
         if (!item1.activeSelf) return item1;
@@ -63,19 +68,16 @@ public class ItemManager : MonoBehaviour
         item2.SetActive(false);
     }
 
-
-    public void SetItemName(string name)
-    {
-        currentItemName = name;
-    }
-
     public Sprite GetItemSprite()
     {
         if (specialItemSprites.ContainsKey(currentItemName))
         {
             return specialItemSprites[currentItemName];
         }
-        return commonItemSprites[Random.Range(0, commonItemSprites.Count)];
+        int index = Random.Range(0, commonItemSprites.Count);
+        Sprite sprite = commonItemSprites[index];
+        currentItemName = sprite.name;
+        return sprite;
     }
 
     public Sprite GetItemMembrane()

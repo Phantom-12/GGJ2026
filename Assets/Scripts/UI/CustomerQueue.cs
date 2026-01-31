@@ -74,11 +74,13 @@ public class CustomerQueue : MonoBehaviour
             List<string> keys = new List<string>(specialCustomerSprites.Keys);
             string specialName = keys[Random.Range(0, keys.Count)];
             custScript.SetCustomerSprite(specialCustomerSprites[specialName]);
+            custScript.isSpecial = true;
         }
         else
         {
             int index = Random.Range(0, commonCustomerSprites.Count);
             custScript.SetCustomerSprite(commonCustomerSprites[index]);
+            custScript.isSpecial = false;
         }
         customerQueue.Enqueue(customer);
         customer.transform.position = new Vector3(-100, 0, 0);
@@ -92,6 +94,14 @@ public class CustomerQueue : MonoBehaviour
         GameObject customer = customerQueue.Peek();
         Customer customerScript = customer.GetComponent<Customer>();
         return customerScript.GetCustomerName();
+    }
+
+    public bool IsFirstCustomerSpecial()
+    {
+        if (customerQueue.Count == 0) return false;
+        GameObject customer = customerQueue.Peek();
+        Customer customerScript = customer.GetComponent<Customer>();
+        return customerScript.isSpecial;
     }
 
     public void CustomerLeave(int direction = 1)
