@@ -15,6 +15,7 @@ public class CustomerQueue : MonoBehaviour
     public int stepsToBooth = 7, stepsToLeave = 10;
     public float specialCustomerChance = 0.3f;
     private int maxCustomer = 5;
+    private bool isQueueMoving = false;
 
     public void Init()
     {
@@ -33,15 +34,15 @@ public class CustomerQueue : MonoBehaviour
         Sprite[] loadedCommonSprites = Resources.LoadAll<Sprite>("Sprites/Customers/Common");
         commonCustomerSprites.AddRange(loadedCommonSprites);
     }
-    
+
     IEnumerator InitCustomerQueue()
     {
         customerQueue.Clear();
         for (int i = 0; i < maxCustomer; i++)
         {
             GameObject customer = CreateCustomer();
-            yield return new WaitForSeconds(Random.Range(0.2f, 0.5f));
             StartCustomerJumpRoutine(customer, 1, stepsToBooth - i);
+            yield return new WaitForSeconds(Random.Range(0.1f, 0.3f));
         }
         GameManager.Instance.StartFirstRound();
         StartCoroutine(AddCustomerListener());
@@ -68,6 +69,7 @@ public class CustomerQueue : MonoBehaviour
             int index = Random.Range(0, commonCustomerSprites.Count);
             custScript.SetCustomerSprite(commonCustomerSprites[index]);
         }
+        customerQueue.Enqueue(customer);
         customer.transform.position = new Vector3(-100, 0, 0);
         customer.SetActive(true);
         return customer;
@@ -88,6 +90,7 @@ public class CustomerQueue : MonoBehaviour
         GameObject customer = customerQueue.Dequeue();
         StartCoroutine(CustomerLeaveCoroutine(customer, direction));
         StartCoroutine(QueueCustomerCoroutine());
+        isQueueMoving = true;
     }
 
     IEnumerator AddCustomerListener()
@@ -95,10 +98,10 @@ public class CustomerQueue : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(Random.Range(0.8f, 2f));
-            if (customerQueue.Count < maxCustomer)
+            if (!isQueueMoving && customerQueue.Count < maxCustomer)
             {
                 GameObject customer = CreateCustomer();
-                StartCustomerJumpRoutine(customer, 1, stepsToBooth - customerQueue.Count);
+                StartCustomerJumpRoutine(customer, 1, stepsToBooth - customerQueue.Count + 1);
             }
         }
     }
@@ -113,13 +116,12 @@ public class CustomerQueue : MonoBehaviour
 
     IEnumerator QueueCustomerCoroutine()
     {
-        yield return new WaitForSeconds(Random.Range(0.5f, 1f));
-
         foreach (GameObject cust in customerQueue)
         {
             yield return new WaitForSeconds(Random.Range(0.1f, 0.5f));
             StartCustomerJumpRoutine(cust, 1, 1);
         }
+        isQueueMoving = false;
     }
 
     public void StartCustomerJumpRoutine(GameObject customer, int direction = 1, int steps = 1)
