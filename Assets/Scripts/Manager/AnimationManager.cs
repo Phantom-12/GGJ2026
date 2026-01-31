@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class AnimationManager : MonoBehaviour
 {
     public static AnimationManager Instance;
+    [SerializeField] private Indicator indicator;
     public Animator startCanvasAnimator, infoCanvasAnimator, endCanvasAnimator, catAnimator;
     public List<Sprite> ratingSprites = new();
     public Text scoreAddition, finalScoreText;
@@ -88,6 +90,7 @@ public class AnimationManager : MonoBehaviour
         pasteButton.SetActive(false);
         startCanvasAnimator.SetTrigger("Hide");
         infoCanvasAnimator.SetTrigger("Show");
+        indicator.Show();
     }
 
     public void GameOverAnimation()
@@ -99,12 +102,14 @@ public class AnimationManager : MonoBehaviour
 
         endCanvasAnimator.SetTrigger("Show");
         infoCanvasAnimator.SetTrigger("Hide");
+        indicator.Hide();
     }
 
     public void RestartGameAnimation()
     {
         endCanvasAnimator.SetTrigger("Hide");
         infoCanvasAnimator.SetTrigger("Show");
+        indicator.Show();
     }
 
     public void ReturnToStartAnimation()

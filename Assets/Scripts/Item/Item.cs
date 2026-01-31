@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
+    [SerializeField]
+    private Object operableObject;
     public Vector3 startPosition;
     public float slideOutOffset = 10f;
     public SpriteRenderer spriteRenderer => GetComponent<SpriteRenderer>();
@@ -26,6 +28,7 @@ public class Item : MonoBehaviour
         targetPosition = AnimationManager.Instance.originalPosition;
         gameObject.SetActive(true);
         StartCoroutine(SlideInRoutine());
+        operableObject.Appear();
     }
 
     public void SlideOut()
@@ -52,7 +55,6 @@ public class Item : MonoBehaviour
 
     IEnumerator SlideOutRoutine()
     {
-        AnimationManager.Instance.HidePasteButton();
         float elapsedTime = 0f;
         float duration = AnimationManager.Instance.itemAnimationDuration;
         Vector3 startPos = transform.position;

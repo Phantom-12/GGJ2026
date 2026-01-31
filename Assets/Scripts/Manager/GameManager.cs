@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +11,8 @@ public class GameManager : MonoBehaviour
     public int totalTime = 600;
     public Text timeText, scoreText;
     public List<int> ratingScoreList = new() { 70, 100, 125, 150, 175 };
+    [SerializeField]
+    private Object operableObject;
     int time = 0, score = 0;
     // Start is called before the first frame update
     public void Start()
@@ -121,7 +124,16 @@ public class GameManager : MonoBehaviour
     /* TODO: 将膜放下，并计分的函数 */
     public void PutMaskDown()
     {
-        
+        PutMaskDownInner().Forget();
+    }
+
+    private async UniTaskVoid PutMaskDownInner()
+    {
+        AnimationManager.Instance.HidePasteButton();
+        var (curMood,curScore) = await operableObject.PutDown();
+        AnimationManager.Instance.ScoreAdditionAnimation(curScore);
+        AnimationManager.Instance.ChangeCatMood(curMood);
+        StartNextRound();
     }
 
     public void AddScore(int amount)

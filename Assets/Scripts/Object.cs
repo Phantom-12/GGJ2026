@@ -1,46 +1,60 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class Object : MonoBehaviour
 {
+    private static readonly int Time1 = Shader.PropertyToID("_Time_");
+    private static readonly int Speed = Shader.PropertyToID("_Speed");
+
     enum State
     {
         BeforeAppear,
         Moving,
-        PushedDown,
+        PutDown,
     }
-    
+
     [Header("引用")] [SerializeField] private Transform reference;
+    [SerializeField] private Transform targetProxy;
     [SerializeField] private Transform target;
-    [SerializeField] private ParticleSystem particle;
+    [SerializeField] private SpriteMask spriteMask;
+    [SerializeField] private Transform handLeft;
+    [SerializeField] private Transform handRight;
+    [SerializeField] private Transform putDownShower;
+    [SerializeField] private ParticleSystem particleAppear;
+    [SerializeField] private ParticleSystem particlePutDown;
 
-    [Header("配置")] [SerializeField] private float moveSpeed = 1;
-    [SerializeField] private float timeFactor = 0;
-    [SerializeField] private float maxBackSpeed = 1;
-    [SerializeField] private float inertiaFactor = 1;
+    [Header("配置")] [SerializeField] private Distance2Score scoreCfg;
+    [SerializeField] private float moveDuration = 1;
+    [SerializeField] private float radius = 2f;
+    [SerializeField] private float putDownShowDuration = 2f;
 
-    private Vector2 _curAccVelocity = Vector2.zero;
-    private float _lastCenterTime = 0;
     private State _state = State.BeforeAppear;
+    private Tween _moveTween;
+    private SpriteRenderer _spriteRenderer;
+    private SpriteRenderer _putDownShowSpriteRenderer;
 
     private void Start()
     {
-        target.localScale = new Vector2(0, 0);
-        _lastCenterTime = Time.time;
-        Appear();
+        _spriteRenderer = target.GetComponent<SpriteRenderer>();
+        _putDownShowSpriteRenderer = putDownShower.GetComponent<SpriteRenderer>();
+        targetProxy.localScale = new Vector2(0, 0);
+        putDownShower.gameObject.SetActive(false);
+        gameObject.SetActive(false);
+        transform.position = AnimationManager.Instance.originalPosition;
     }
 
     private void Update()
     {
-        if (_state == State.Moving)
+        if (_state == State.BeforeAppear)
         {
-            UpdateVelocity();
-            Move();
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                PushDown();
+                Appear();
             }
         }
     }
@@ -48,51 +62,132 @@ public class Object : MonoBehaviour
     // 出现效果
     public void Appear()
     {
+        if (_state != State.BeforeAppear)
+        {
+            return;
+        }
+
+        _spriteRenderer.sprite = ItemManager.Instance.GetItemMembrane();
+        spriteMask.sprite = ItemManager.Instance.GetItemMembrane();
+        _putDownShowSpriteRenderer.sprite = ItemManager.Instance.GetItemMembrane();
+
+        gameObject.SetActive(true);
         _state = State.Moving;
-        target.localScale = Vector3.zero;
-        target.position = Vector3.zero;
-        particle.Play();
-        target.DOScale(Vector2.one, 0.2f).SetEase(Ease.OutBack);
+        targetProxy.localScale = Vector3.zero;
+        targetProxy.position = RandomCirclePoint(reference.position, radius);
+        particleAppear.Play();
+        targetProxy.DOScale(Vector2.one, 0.2f).SetEase(Ease.OutBack);
+        // target.DOShakePosition(10f, 0.1f, 10, 90, false, false).SetLoops(-1);
+        StartMove().Forget();
     }
 
     // 放下效果
-    public void PushDown()
+    public async UniTask<(int, int)> PutDown()
     {
-        Debug.Log(CalcOverlapArea());
-        target.localScale = new Vector2(0, 0);
-        _state = State.PushedDown;
-    }
-
-    // 计算重合面积
-    public float CalcOverlapArea()
-    {
-        return Vector2.Distance(target.position, reference.position);
-    }
-
-    private void UpdateVelocity()
-    {
-        float deltaTime = Time.time - _lastCenterTime;
-        var randomValueX = Random.value * (Random.value < 0.5 ? 1 : -1);
-        _curAccVelocity.x += randomValueX;
-        var randomValueY = Random.value * (Random.value < 0.5 ? 1 : -1);
-        _curAccVelocity.y += randomValueY;
-        var backVelocity = deltaTime * timeFactor * (Vector2)(reference.position - target.position).normalized;
-        if (backVelocity.magnitude > maxBackSpeed)
+        if (_state != State.Moving)
         {
-            backVelocity = backVelocity.normalized * maxBackSpeed;
+            return (0, 0);
         }
-        _curAccVelocity += backVelocity;
-        _curAccVelocity.Normalize();
-        _curAccVelocity *= inertiaFactor;
+
+        _state = State.PutDown;
+        StopMove();
+        particlePutDown.Play();
+        await ShowPutDown();
+        await targetProxy.DOScale(Vector2.zero, 0.2f).SetEase(Ease.OutBack).AsyncWaitForCompletion();
+        _state = State.BeforeAppear;
+        return CalcScore();
     }
 
-    private void Move()
+    // 计算距离
+    private float CalcDistance()
     {
-        target.position += (Vector3)(_curAccVelocity.normalized * (moveSpeed * Time.deltaTime));
-        float deltaTime = Time.time - _lastCenterTime;
-        if (Vector2.Distance(reference.position, target.position) <= 0.1f && deltaTime > 0.5)
+        return Vector2.Distance(targetProxy.position, reference.position);
+    }
+
+    public (int, int) CalcScore()
+    {
+        var dis = CalcDistance();
+        for (int i = 0; i < scoreCfg.data.Count; i++)
         {
-            _lastCenterTime = Time.time;
+            if (dis < scoreCfg.data[i].distance)
+            {
+                return (3 - i, scoreCfg.data[i].score);
+            }
         }
+
+        return (0, 0);
+    }
+
+    private Vector2 RandomCirclePoint(Vector2 center, float radius)
+    {
+        return Random.insideUnitCircle * radius + center;
+    }
+
+    private async UniTaskVoid StartMove()
+    {
+        while (_state == State.Moving)
+        {
+            await MoveOnce();
+        }
+    }
+
+    private void StopMove()
+    {
+        DOTween.Kill("Move");
+    }
+
+    private async UniTask MoveOnce()
+    {
+        var keyNums = 60;
+        float sum = 0;
+        float[] sums = new float[keyNums];
+        Keyframe[] keyframes = new Keyframe[keyNums];
+        for (int i = 0; i < keyNums; i++)
+        {
+            var t = (float)i / keyNums;
+            if (t < 0.2)
+            {
+                sum += 5 * t;
+            }
+            else if (t > 0.8)
+            {
+                sum += -5 * t + 5;
+            }
+            else
+            {
+                sum += 50f / 9 * (t - 0.5f) * (t - 0.5f) + 0.5f;
+            }
+
+            sums[i] = sum;
+        }
+
+        for (int i = 0; i < keyNums; i++)
+        {
+            var t = (float)i / keyNums;
+            keyframes[i] = new Keyframe(t, sums[i] / sum);
+        }
+
+        AnimationCurve curve = new AnimationCurve(keyframes);
+        Vector3[] points = { reference.position, RandomCirclePoint(reference.position, radius) };
+        await targetProxy.DOPath(points, moveDuration, PathType.CatmullRom).SetEase(curve).SetId("Move")
+            .AsyncWaitForCompletion();
+    }
+
+    private async UniTask ShowPutDown()
+    {
+        putDownShower.gameObject.SetActive(true);
+        var renderer = putDownShower.GetComponent<Renderer>();
+        float time = putDownShowDuration;
+        renderer.material.SetFloat(Speed, 1f / putDownShowDuration);
+        while (true)
+        {
+            time -= Time.deltaTime;
+            if (time <= 0)
+                break;
+            renderer.material.SetFloat(Time1, time);
+            await UniTask.Yield();
+        }
+
+        putDownShower.gameObject.SetActive(false);
     }
 }
