@@ -7,11 +7,14 @@ public class AnimationManager : MonoBehaviour
 {
     public static AnimationManager Instance;
     public Animator startCanvasAnimator, infoCanvasAnimator, endCanvasAnimator, catAnimator;
-
-    public Text scoreAddition;
+    public List<Sprite> ratingSprites = new();
+    public Text scoreAddition, finalScoreText;
+    public Image ratingImage;
     public Vector3 originalPosition;
     public float itemAnimationDuration = 0.4f;
+    public GameObject pasteButton;
     private GameObject item;
+    private Sprite ratingSprite;
 
     public void Start()
     {
@@ -70,14 +73,30 @@ public class AnimationManager : MonoBehaviour
         GameManager.Instance.AddScore(addition);
     }
 
+    public void ShowPasteButton()
+    {
+        pasteButton.SetActive(true);
+    }
+
+    public void HidePasteButton()
+    {
+        pasteButton.SetActive(false);
+    }
+
     public void StartGameAnimation()
     {
+        pasteButton.SetActive(false);
         startCanvasAnimator.SetTrigger("Hide");
         infoCanvasAnimator.SetTrigger("Show");
     }
 
     public void GameOverAnimation()
     {
+        int ratingIndex = GameManager.Instance.GetRatingIndex();
+        ratingSprite = ratingSprites[Mathf.Clamp(ratingIndex, 0, ratingSprites.Count - 1)];
+        ratingImage.sprite = ratingSprite;
+        finalScoreText.text = $"Final Score\n {GameManager.Instance.GetScore()}";
+
         endCanvasAnimator.SetTrigger("Show");
         infoCanvasAnimator.SetTrigger("Hide");
     }
@@ -102,6 +121,7 @@ public class AnimationManager : MonoBehaviour
 
     public void CatStartWorking()
     {
+        catAnimator.SetInteger("Result", 0);
         catAnimator.SetTrigger("Idle");
         catAnimator.SetBool("Working", true);
     }

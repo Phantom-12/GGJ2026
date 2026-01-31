@@ -76,7 +76,7 @@ public class ItemManager : MonoBehaviour
         }
         int index = Random.Range(0, commonItemSprites.Count);
         Sprite sprite = commonItemSprites[index];
-        currentItemName = sprite.name;
+        if(currentItemName == "") currentItemName = sprite.name;
         return sprite;
     }
 

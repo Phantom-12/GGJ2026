@@ -47,10 +47,12 @@ public class Item : MonoBehaviour
             transform.position = Vector3.Lerp(startPos, targetPosition, elapsedTime / duration);
         }
         AnimationManager.Instance.CatStartWorking();
+        AnimationManager.Instance.ShowPasteButton();
     }
 
     IEnumerator SlideOutRoutine()
     {
+        AnimationManager.Instance.HidePasteButton();
         float elapsedTime = 0f;
         float duration = AnimationManager.Instance.itemAnimationDuration;
         Vector3 startPos = transform.position;

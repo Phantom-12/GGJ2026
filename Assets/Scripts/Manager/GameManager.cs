@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public CustomerQueue queue;
     public int totalTime = 600;
     public Text timeText, scoreText;
-    public Text finalScoreText;
+    public List<int> ratingScoreList = new() { 70, 100, 125, 150, 175 };
     int time = 0, score = 0;
     // Start is called before the first frame update
     public void Start()
@@ -24,6 +24,11 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
             Instance.Start();
         }
+    }
+
+    public int GetScore()
+    {
+        return score;
     }
 
     public void StartGame()
@@ -53,7 +58,6 @@ public class GameManager : MonoBehaviour
         StopAllCoroutines();
         ItemManager.Instance.ResetItems();
         queue.ClearQueue();
-        finalScoreText.text = $"Final Score\n{score}";
         AnimationManager.Instance.GameOverAnimation();
     }
 
@@ -66,7 +70,7 @@ public class GameManager : MonoBehaviour
         {
             ItemManager.Instance.SetCurrentItemName("");
         }
-        
+
         GameObject itemObject = ItemManager.Instance.GetAvailableItemObject();
         Item itemScript = itemObject.GetComponent<Item>();
         itemScript.Init();
@@ -94,6 +98,24 @@ public class GameManager : MonoBehaviour
         itemScript.Init();
         
         AnimationManager.Instance.ItemSlideInAnimation();
+    }
+
+    public int GetRatingIndex()
+    {
+        int rating = 0;
+        foreach (int threshold in ratingScoreList)
+        {
+            if (score >= threshold)
+            {
+                rating++;
+            }
+            else
+            {
+                break;
+            }
+        }
+        return rating;
+        
     }
 
     /* TODO: 将膜放下，并计分的函数 */

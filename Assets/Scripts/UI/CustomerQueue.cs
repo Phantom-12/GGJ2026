@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -12,6 +13,7 @@ public class CustomerQueue : MonoBehaviour
     private Queue<GameObject> customerQueue = new();
     public Dictionary<string, Sprite> specialCustomerSprites = new();
     public List<Sprite> commonCustomerSprites = new();
+    public Dictionary<GameObject, Coroutine> customerMovingCoroutines = new();
     public int stepsToBooth = 7, stepsToLeave = 10;
     public float specialCustomerChance = 0.3f;
     public int maxCustomer = 5;
@@ -137,20 +139,24 @@ public class CustomerQueue : MonoBehaviour
 
     IEnumerator QueueCustomerCoroutine()
     {
+        customerMovingCoroutines.Clear();
         foreach (GameObject cust in customerQueue)
         {
             yield return new WaitForSeconds(Random.Range(0.1f, 0.5f));
-            StartCustomerJumpRoutine(cust, 1, 1);
+            Coroutine movingCoroutine = StartCustomerJumpRoutine(cust, 1, 1);
+            customerMovingCoroutines[cust] = movingCoroutine;
         }
+        yield return new WaitUntil(() => customerMovingCoroutines.Values.All(v => v == null));
         isQueueMoving = false;
     }
 
-    public void StartCustomerJumpRoutine(GameObject customer, int direction = 1, int steps = 1)
+    public Coroutine StartCustomerJumpRoutine(GameObject customer, int direction = 1, int steps = 1)
     {
-        if (steps <= 0) return;
+        if (steps <= 0) return null;
         customer.SetActive(true);
         Customer customerScript = customer.GetComponent<Customer>();
-        StartCoroutine(CustomerJumpCoroutine(customerScript, direction, steps));
+        Coroutine movingCoroutine = StartCoroutine(CustomerJumpCoroutine(customerScript, direction, steps));
+        return movingCoroutine;
     }
 
     IEnumerator CustomerJumpCoroutine(Customer customerScript, int direction, int steps)
@@ -160,5 +166,7 @@ public class CustomerQueue : MonoBehaviour
             customerScript.Jump(direction > 0);
             yield return new WaitUntil(() => !customerScript.isJumping);
         }
+        if (!customerMovingCoroutines.ContainsKey(customerScript.gameObject)) yield break;
+        customerMovingCoroutines[customerScript.gameObject] = null;
     }
 }
