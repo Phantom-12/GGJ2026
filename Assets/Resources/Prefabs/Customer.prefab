@@ -90,5 +90,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   customerName: 
   jumpDistance: 180
-  jumpHeight: 60
-  jumpDuration: 0.4
+  jumpHeight: 20
+  jumpDuration: 0.3

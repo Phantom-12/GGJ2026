@@ -50,6 +50,12 @@ public class ItemManager : MonoBehaviour
         return null;
     }
 
+    public void ResetItems()
+    {
+        item1.SetActive(false);
+        item2.SetActive(false);
+    }
+
 
     public void SetItemName(string name)
     {

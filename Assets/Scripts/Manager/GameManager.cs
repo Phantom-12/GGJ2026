@@ -37,9 +37,22 @@ public class GameManager : MonoBehaviour
         queue.Init();
     }
 
+    public void RestartGame()
+    {
+        AnimationManager.Instance.RestartGameAnimation();
+        StartGame();
+    }
+
+    public void ExitToMainMenu()
+    {
+        AnimationManager.Instance.ReturnToStartAnimation();
+    }
+
     public void GameOver()
     {
         StopAllCoroutines();
+        ItemManager.Instance.ResetItems();
+        queue.ClearQueue();
         finalScoreText.text = $"Final Score\n{score}";
         AnimationManager.Instance.GameOverAnimation();
     }

@@ -26,16 +26,6 @@ public class AnimationManager : MonoBehaviour
         }
     }
 
-    public void ShowInfoCanvas()
-    {
-        infoCanvasAnimator.SetTrigger("Show");
-    }
-
-    public void HideInfoCanvas()
-    {
-        infoCanvasAnimator.SetTrigger("Hide");
-    }
-
     public void ItemSlideInAnimation()
     {
         item = ItemManager.Instance.GetAvailableItemObject();
@@ -83,13 +73,25 @@ public class AnimationManager : MonoBehaviour
     public void StartGameAnimation()
     {
         startCanvasAnimator.SetTrigger("Hide");
-        ShowInfoCanvas();
+        infoCanvasAnimator.SetTrigger("Show");
     }
 
     public void GameOverAnimation()
     {
         endCanvasAnimator.SetTrigger("Show");
-        HideInfoCanvas();
+        infoCanvasAnimator.SetTrigger("Hide");
+    }
+
+    public void RestartGameAnimation()
+    {
+        endCanvasAnimator.SetTrigger("Hide");
+        infoCanvasAnimator.SetTrigger("Show");
+    }
+
+    public void ReturnToStartAnimation()
+    {
+        endCanvasAnimator.SetTrigger("Hide");
+        startCanvasAnimator.SetTrigger("Show");
     }
 
     public void ChangeCatMood(int resultCode)

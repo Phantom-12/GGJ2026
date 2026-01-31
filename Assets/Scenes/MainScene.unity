@@ -771,7 +771,7 @@ MonoBehaviour:
   totalTime: 600
   timeText: {fileID: 1757000823}
   scoreText: {fileID: 1946745236}
-  finalScoreText: {fileID: 0}
+  finalScoreText: {fileID: 1338100306}
 --- !u!114 &360516119
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -789,7 +789,7 @@ MonoBehaviour:
   endCanvasAnimator: {fileID: 153815860}
   catAnimator: {fileID: 776904247}
   scoreAddition: {fileID: 1201117251}
-  originalPosition: {x: 1.5, y: 1.5, z: 0}
+  originalPosition: {x: 0, y: 0.5, z: 0}
   itemAnimationDuration: 0.4
 --- !u!4 &360516120
 Transform:
@@ -800,7 +800,7 @@ Transform:
   m_GameObject: {fileID: 360516117}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1984.0935, y: 1128.7196, z: -13.815761}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1473,7 +1473,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6792453, g: 0.6792453, b: 0.6792453, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1703,7 +1703,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 939850437}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 360516118}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: RestartGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &939850437
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2481,7 +2493,7 @@ GameObject:
   - component: {fileID: 1338100307}
   - component: {fileID: 1338100306}
   m_Layer: 5
-  m_Name: Text (Legacy)
+  m_Name: FinalScore
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3198,7 +3210,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1641973994}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 360516118}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: ExitToMainMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1641973994
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3708,7 +3732,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.93392605, b: 0.6556604, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3763,6 +3787,7 @@ MonoBehaviour:
   stepsToBooth: 10
   stepsToLeave: 12
   specialCustomerChance: 0.3
+  maxCustomer: 8
 --- !u!1 &1865262333
 GameObject:
   m_ObjectHideFlags: 0
@@ -3793,8 +3818,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc96f452e10c740f4b0d9250804157ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startPosition: {x: 1.5, y: 10, z: 0}
-  slideOutOffset: 10
+  startPosition: {x: 0, y: 8, z: 0}
+  slideOutOffset: 8
 --- !u!212 &1865262335
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3837,7 +3862,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -3857,7 +3882,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.5, y: 10, z: 0}
-  m_LocalScale: {x: 8.4, y: 3.6, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -3922,7 +3947,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -3942,7 +3967,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.5, y: 10, z: 0}
-  m_LocalScale: {x: 8.4, y: 3.6, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -3959,8 +3984,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc96f452e10c740f4b0d9250804157ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startPosition: {x: 1.5, y: 10, z: 0}
-  slideOutOffset: 10
+  startPosition: {x: 0, y: 8, z: 0}
+  slideOutOffset: 8
 --- !u!1 &1946745235
 GameObject:
   m_ObjectHideFlags: 0

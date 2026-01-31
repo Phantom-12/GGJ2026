@@ -14,11 +14,12 @@ public class CustomerQueue : MonoBehaviour
     public List<Sprite> commonCustomerSprites = new();
     public int stepsToBooth = 7, stepsToLeave = 10;
     public float specialCustomerChance = 0.3f;
-    private int maxCustomer = 5;
+    public int maxCustomer = 5;
     private bool isQueueMoving = false;
 
     public void Init()
     {
+        ClearQueue();
         LoadCustomerSprites();
         StartCoroutine(InitCustomerQueue());
     }
@@ -33,6 +34,16 @@ public class CustomerQueue : MonoBehaviour
 
         Sprite[] loadedCommonSprites = Resources.LoadAll<Sprite>("Sprites/Customers/Common");
         commonCustomerSprites.AddRange(loadedCommonSprites);
+    }
+
+    public void ClearQueue()
+    {
+        StopAllCoroutines();
+        foreach (GameObject customer in customerQueue)
+        {
+            customer.SetActive(false);
+        }
+        customerQueue.Clear();
     }
 
     IEnumerator InitCustomerQueue()
