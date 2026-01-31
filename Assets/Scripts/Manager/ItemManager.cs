@@ -8,6 +8,7 @@ public class ItemManager : MonoBehaviour
     public GameObject item1, item2;
     public Dictionary<string, Sprite> specialItemSprites = new();
     public List<Sprite> commonItemSprites = new();
+    public Dictionary<string, Sprite> itemMembranes = new();
     public string currentItemName = "";
 
     public void Start()
@@ -34,6 +35,12 @@ public class ItemManager : MonoBehaviour
 
         Sprite[] loadedCommonSprites = Resources.LoadAll<Sprite>("Sprites/Items/Common");
         commonItemSprites.AddRange(loadedCommonSprites);
+
+        Sprite[] loadedMembranes = Resources.LoadAll<Sprite>("Sprites/Items/Membranes");
+        foreach (Sprite sprite in loadedMembranes)
+        {
+            itemMembranes[sprite.name] = sprite;
+        }
     }
 
     public GameObject GetAvailableItemObject()
@@ -69,5 +76,14 @@ public class ItemManager : MonoBehaviour
             return specialItemSprites[currentItemName];
         }
         return commonItemSprites[Random.Range(0, commonItemSprites.Count)];
+    }
+
+    public Sprite GetItemMembrane()
+    {
+        if (itemMembranes.ContainsKey(currentItemName))
+        {
+            return itemMembranes[currentItemName];
+        }
+        return null;
     }
 }
