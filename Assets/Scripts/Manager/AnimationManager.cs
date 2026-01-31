@@ -6,6 +6,8 @@ public class AnimationManager : MonoBehaviour
 {
     public static AnimationManager Instance;
 
+    public GameObject item;
+
     public Vector3 originalPosition;
     public float itemAnimationDuration = 0.4f;
 
