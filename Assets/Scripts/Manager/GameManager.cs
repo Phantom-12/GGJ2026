@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +7,9 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public Progress progress;
+    public Item item;
     public Text timeText, scoreText;
+    public Text finalScoreText;
     public int customerCount = 5;
     int time = 0, score = 0;
     // Start is called before the first frame update
@@ -24,8 +25,6 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
             Instance.Start();
         }
-
-        StartGame();
     }
 
     public void StartGame()
@@ -37,7 +36,6 @@ public class GameManager : MonoBehaviour
         StopAllCoroutines();
         StartCoroutine(Timer());
         progress.InitProgress(customerCount);
-        AnimationManager.Instance.StartItemAnimation();
     }
 
     public void AddScore(int amount)
@@ -54,5 +52,10 @@ public class GameManager : MonoBehaviour
             time++;
             timeText.text = $"Time {time/3600:D2}:{(time/60)%60:D2}:{time%60:D2}";
         }
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 }

@@ -6,6 +6,8 @@ public class AnimationManager : MonoBehaviour
 {
     public static AnimationManager Instance;
 
+    public Animator startCanvasAnimator, endCanvasAnimator;
+    public GameObject infoCanvas;
     public GameObject item;
     public Vector3 originalPosition;
     public float itemAnimationDuration = 0.4f;
@@ -24,13 +26,24 @@ public class AnimationManager : MonoBehaviour
         }
     }
 
-    public void StartItemAnimation()
+    public void ItemSlideInAnimation()
     {
         Item itemScript = item.GetComponent<Item>();
-        itemScript.Init(item.GetComponent<SpriteRenderer>().sprite);
         if (itemScript != null)
         {
             itemScript.SlideIn();
         }
+    }
+
+    public void StartGameAnimation()
+    {
+        startCanvasAnimator.SetTrigger("Hide");
+        infoCanvas.SetActive(true);
+    }
+
+    public void GameOverAnimation()
+    {
+        infoCanvas.SetActive(false);
+        endCanvasAnimator.SetTrigger("Show");
     }
 }

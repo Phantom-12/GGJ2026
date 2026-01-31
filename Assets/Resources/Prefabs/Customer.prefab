@@ -88,6 +88,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d2c77dbf9c29426aa7d07cc946015de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpDistance: 200
-  jumpHeight: 60
-  jumpDuration: 0.35
+  jumpDistance: 240
+  jumpHeight: 80
+  jumpDuration: 0.4

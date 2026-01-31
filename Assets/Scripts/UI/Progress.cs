@@ -7,36 +7,68 @@ using UnityEngine.UI;
 public class Progress : MonoBehaviour
 {
     public GameObject customerPrefab;
-    private List<GameObject> customerPool;
-    public int stepsToBooth = 7;
+    private Item itemScript => GameManager.Instance.item;
+    private List<GameObject> customerPool = new();
+    private Queue<GameObject> customerQueue = new();
+    public int stepsToBooth = 7, stepsToLeave = 10;
     private int totalProgress = 5;
-    private int currentProgress = 0;
 
     public void InitProgress(int progress)
     {
         totalProgress = Mathf.Clamp(progress, 0, totalProgress);
-        currentProgress = 0;
         for (int i = customerPool.Count; i < totalProgress; i++)
         {
             GameObject customer = Instantiate(customerPrefab, transform);
             customer.SetActive(false);
-            customer.transform.localPosition = new Vector3(-100, 0, 0);
+            customer.transform.position = new Vector3(-100, 0, 0);
             customerPool.Add(customer);
         }
+        StartCoroutine(InitCustomerQueue());
+    }
+    IEnumerator InitCustomerQueue()
+    {
+        customerQueue.Clear();
         for (int i = 0; i < totalProgress; i++)
         {
             GameObject customer = customerPool.Find(c => !c.activeSelf);
             if (customer != null)
             {
                 customer.SetActive(true);
-                customer.transform.localPosition = new Vector3(-100, 0, 0);
+                customer.transform.position = new Vector3(-100, 0, 0);
+                customerQueue.Enqueue(customer);
             }
-
+            yield return new WaitForSeconds(Random.Range(0.2f, 0.5f));
             StartCustomerJumpRoutine(customer, 1, stepsToBooth - i);
         }
+        AnimationManager.Instance.ItemSlideInAnimation();
     }
 
+    public void CustomerLeave()
+    {
+        if (customerQueue.Count == 0) return;
+        GameObject customer = customerQueue.Dequeue();
+        StartCoroutine(CustomerLeaveCoroutine(customer));
+        StartCoroutine(QueueCustomerCoroutine());
+    }
 
+    IEnumerator CustomerLeaveCoroutine(GameObject customer)
+    {
+        Customer customerScript = customer.GetComponent<Customer>();
+        StartCustomerJumpRoutine(customer, 1, stepsToLeave);
+        yield return new WaitUntil(() => !customerScript.isJumping);
+        customer.SetActive(false);
+    }
+
+    IEnumerator QueueCustomerCoroutine()
+    {
+        yield return new WaitForSeconds(Random.Range(0.5f, 1f));
+
+        foreach (GameObject cust in customerQueue)
+        {
+            yield return new WaitForSeconds(Random.Range(0.1f, 0.5f));
+            StartCustomerJumpRoutine(cust, 1, 1);
+        }
+    }
 
     public void StartCustomerJumpRoutine(GameObject customer, int direction = 1, int steps = 1)
     {
@@ -48,7 +80,6 @@ public class Progress : MonoBehaviour
 
     IEnumerator CustomerJumpCoroutine(Customer customerScript, int direction, int steps)
     {
-        yield return new WaitForSeconds(Random.Range(0f, 0.3f));
         for (int i = 0; i < steps; i++)
         {
             customerScript.Jump(direction > 0);

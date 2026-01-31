@@ -5,7 +5,7 @@ using UnityEngine;
 public class Item : MonoBehaviour
 {
     public Vector3 startPosition;
-    public float offsetY = 10f;
+    public float slideOutOffset = 10f;
     public SpriteRenderer spriteRenderer;
     private Vector3 targetPosition;
 
@@ -15,10 +15,15 @@ public class Item : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    public void Init(Sprite newSprite)
+    public void Init(string spriteName = "")
     {
+        Sprite newSprite = ItemManager.Instance.GetSpecialItemSprite(spriteName);
+        if (newSprite == null)
+        {
+            newSprite = ItemManager.Instance.GetRandomCommonItemSprite();
+        }
         spriteRenderer.sprite = newSprite;
-        transform.position = new Vector3(startPosition.x, startPosition.y + offsetY, 0);
+        transform.position = new Vector3(startPosition.x, startPosition.y, 0);
     }
     
     public void SlideIn()
@@ -29,7 +34,7 @@ public class Item : MonoBehaviour
 
     public void SlideOut()
     {
-        targetPosition = new Vector3(transform.position.x, startPosition.y + offsetY, 0);
+        targetPosition = transform.position + new Vector3(slideOutOffset, 0, 0);
         StartCoroutine(Slide());
     }
 
