@@ -36,7 +36,7 @@ public class ItemManager : MonoBehaviour
         Sprite[] loadedCommonSprites = Resources.LoadAll<Sprite>("Sprites/Items/Common");
         commonItemSprites.AddRange(loadedCommonSprites);
 
-        Sprite[] loadedMembranes = Resources.LoadAll<Sprite>("Sprites/Items/Membranes");
+        Sprite[] loadedMembranes = Resources.LoadAll<Sprite>("Sprites/Membranes");
         foreach (Sprite sprite in loadedMembranes)
         {
             itemMembranes[sprite.name] = sprite;
