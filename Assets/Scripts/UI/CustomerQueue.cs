@@ -85,7 +85,7 @@ public class CustomerQueue : MonoBehaviour
             custScript.isSpecial = false;
         }
         customerQueue.Enqueue(customer);
-        customer.transform.position = new Vector3(-100, 0, 0);
+        customer.GetComponent<RectTransform>().anchoredPosition = new Vector3(-100, 0, 0);
         customer.SetActive(true);
         return customer;
     }

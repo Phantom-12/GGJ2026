@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     public List<int> ratingScoreList = new() { 70, 100, 125, 150, 175 };
     [SerializeField]
     private Object operableObject;
+    public bool canPutDown = true;
     int time = 0, score = 0;
     // Start is called before the first frame update
     public void Start()
@@ -43,6 +44,7 @@ public class GameManager : MonoBehaviour
         scoreText.text = "Score 0";
         StopAllCoroutines();
         StartCoroutine(Timer());
+        StartCoroutine(PlayerPutDownListener());
         queue.Init();
         AudioManager.Instance.PlayBGM(AudioType.LevelMusic);
     }
@@ -121,6 +123,18 @@ public class GameManager : MonoBehaviour
         
     }
 
+    IEnumerator PlayerPutDownListener()
+    {
+        while (true)
+        {
+            yield return null;
+            if (canPutDown && Input.GetKeyDown(KeyCode.Space))
+            {
+                PutMaskDown();
+            }
+        }
+    }
+
     /* TODO: 将膜放下，并计分的函数 */
     public void PutMaskDown()
     {
@@ -129,7 +143,7 @@ public class GameManager : MonoBehaviour
 
     private async UniTaskVoid PutMaskDownInner()
     {
-        AnimationManager.Instance.HidePasteButton();
+        GameManager.Instance.canPutDown = false;
         var (curMood,curScore) = await operableObject.PutDown();
         AnimationManager.Instance.ScoreAdditionAnimation(curScore);
         AnimationManager.Instance.ChangeCatMood(curMood);

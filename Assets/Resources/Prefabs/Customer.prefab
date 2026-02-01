@@ -36,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: -100, y: 0}
-  m_SizeDelta: {x: 180, y: 210}
+  m_SizeDelta: {x: 180, y: 270}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &7868128119147619202
 CanvasRenderer:
@@ -89,6 +89,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   customerName: 
-  jumpDistance: 180
+  isSpecial: 0
+  jumpDistance: 200
   jumpHeight: 20
   jumpDuration: 0.3

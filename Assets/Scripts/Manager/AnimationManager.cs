@@ -79,19 +79,9 @@ public class AnimationManager : MonoBehaviour
         GameManager.Instance.AddScore(addition);
     }
 
-    public void ShowPasteButton()
-    {
-        pasteButton.SetActive(true);
-    }
-
-    public void HidePasteButton()
-    {
-        pasteButton.SetActive(false);
-    }
-
     public void StartGameAnimation()
     {
-        pasteButton.SetActive(false);
+        GameManager.Instance.canPutDown = false;
         startCanvasAnimator.SetTrigger("Hide");
         infoCanvasAnimator.SetTrigger("Show");
         indicator.Show();
