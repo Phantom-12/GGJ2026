@@ -4279,7 +4279,7 @@ MonoBehaviour:
   stepsToBooth: 10
   stepsToLeave: 12
   specialCustomerChance: 0.3
-  maxCustomer: 8
+  maxCustomer: 6
 --- !u!114 &1812016479
 MonoBehaviour:
   m_ObjectHideFlags: 0

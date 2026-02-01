@@ -119,7 +119,7 @@ public class CustomerQueue : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(Random.Range(0.8f, 2f));
+            yield return new WaitForSeconds(Random.Range(0f, 0.8f));
             if (!isQueueMoving && customerQueue.Count < maxCustomer)
             {
                 GameObject customer = CreateCustomer();
