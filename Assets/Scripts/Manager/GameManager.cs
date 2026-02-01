@@ -74,10 +74,7 @@ public class GameManager : MonoBehaviour
             ItemManager.Instance.SetCurrentItemName("");
         }
 
-        GameObject itemObject = ItemManager.Instance.GetAvailableItemObject();
-        Item itemScript = itemObject.GetComponent<Item>();
-        itemScript.Init();
-
+        ItemManager.Instance.InitActiveItem();
         AnimationManager.Instance.ItemSlideInAnimation();
     }
 
@@ -87,6 +84,7 @@ public class GameManager : MonoBehaviour
         queue.CustomerLeave();
 
         AnimationManager.Instance.ItemSlideOutAnimation();
+        ItemManager.Instance.SwitchActiveItem();
 
         if(queue.IsFirstCustomerSpecial())
         {
@@ -96,7 +94,7 @@ public class GameManager : MonoBehaviour
             ItemManager.Instance.SetCurrentItemName("");
         }
 
-        GameObject itemObject = ItemManager.Instance.GetAvailableItemObject();
+        GameObject itemObject = ItemManager.Instance.GetCurrentItemObject();
         Item itemScript = itemObject.GetComponent<Item>();
         itemScript.Init();
     }

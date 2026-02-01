@@ -9,8 +9,8 @@ public class AnimationManager : MonoBehaviour
     public static AnimationManager Instance;
     [SerializeField] private Indicator indicator;
     public Animator startCanvasAnimator, infoCanvasAnimator, endCanvasAnimator, catAnimator;
-    public List<Sprite> ratingSprites = new();
-    public List<Sprite> commentSprites = new();
+    [SerializeField] public List<Sprite> commentSprites = new();
+    [SerializeField] public List<Sprite> ratingSprites = new();
     public Text scoreAddition;
     public Image ratingImage, commentImage;
     public Vector3 originalPosition;
@@ -34,7 +34,7 @@ public class AnimationManager : MonoBehaviour
 
     public void ItemSlideInAnimation()
     {
-        item = ItemManager.Instance.GetAvailableItemObject();
+        item = ItemManager.Instance.GetCurrentItemObject();
         if (item == null) return;
         Item itemScript = item.GetComponent<Item>();
         if (itemScript != null)

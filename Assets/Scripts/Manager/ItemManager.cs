@@ -10,6 +10,7 @@ public class ItemManager : MonoBehaviour
     public List<Sprite> commonItemSprites = new();
     public Dictionary<string, Sprite> itemMembranes = new();
     public string currentItemName = "";
+    int activeItemCode = 1;
 
     public void Start()
     {
@@ -48,18 +49,32 @@ public class ItemManager : MonoBehaviour
         currentItemName = itemName;
     }
 
+    public void InitActiveItem()
+    {
+        Item itemScript = item1.GetComponent<Item>();
+        itemScript.Init();
+    }
+
+    public void SwitchActiveItem()
+    {
+        activeItemCode = activeItemCode == 1 ? 2 : 1;
+    }
+
     public GameObject GetAvailableItemObject()
     {
-        if (!item1.activeSelf) return item1;
-        if (!item2.activeSelf) return item2;
+        if (activeItemCode == 1 && !item2.activeSelf){
+            return item2;
+        }
+        if (activeItemCode == 2 && !item1.activeSelf)
+        {
+            return item1;
+        }
         return null;
     }
 
     public GameObject GetCurrentItemObject()
     {
-        if (item1.activeSelf) return item1;
-        if (item2.activeSelf) return item2;
-        return null;
+        return activeItemCode == 1 ? item1 : item2;
     }
 
     public void ResetItems()
@@ -76,7 +91,7 @@ public class ItemManager : MonoBehaviour
         }
         int index = Random.Range(0, commonItemSprites.Count);
         Sprite sprite = commonItemSprites[index];
-        if(currentItemName == "") currentItemName = sprite.name;
+        currentItemName = sprite.name;
         return sprite;
     }
 
