@@ -137,8 +137,7 @@ public class AnimationManager : MonoBehaviour
     }
 
     public void ChangeCatMood(int resultCode)
-    {   
-        Debug.Log(resultCode);
+    {
         if(Random.value < 0.5f)
         {
             catAnimator.SetLayerWeight(1, 1f);
