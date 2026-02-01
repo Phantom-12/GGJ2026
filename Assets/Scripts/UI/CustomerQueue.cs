@@ -109,8 +109,8 @@ public class CustomerQueue : MonoBehaviour
     public void CustomerLeave(int direction = 1)
     {
         if (customerQueue.Count == 0) return;
-        AnimationManager.Instance.ItemSlideOutAnimation();
         GameObject customer = customerQueue.Dequeue();
+        AnimationManager.Instance.ItemSlideOutAnimation();
         StartCoroutine(CustomerLeaveCoroutine(customer, direction));
         StartCoroutine(QueueCustomerCoroutine());
         isQueueMoving = true;
@@ -142,12 +142,13 @@ public class CustomerQueue : MonoBehaviour
         customerMovingCoroutines.Clear();
         foreach (GameObject cust in customerQueue)
         {
-            yield return new WaitForSeconds(Random.Range(0.1f, 0.5f));
+            yield return new WaitForSeconds(0.2f);
             Coroutine movingCoroutine = StartCustomerJumpRoutine(cust, 1, 1);
             customerMovingCoroutines[cust] = movingCoroutine;
         }
         yield return new WaitUntil(() => customerMovingCoroutines.Values.All(v => v == null));
         isQueueMoving = false;
+        AnimationManager.Instance.ItemSlideInAnimation();
     }
 
     public Coroutine StartCustomerJumpRoutine(GameObject customer, int direction = 1, int steps = 1)

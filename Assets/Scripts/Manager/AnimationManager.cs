@@ -10,8 +10,9 @@ public class AnimationManager : MonoBehaviour
     [SerializeField] private Indicator indicator;
     public Animator startCanvasAnimator, infoCanvasAnimator, endCanvasAnimator, catAnimator;
     public List<Sprite> ratingSprites = new();
-    public Text scoreAddition, finalScoreText;
-    public Image ratingImage;
+    public List<Sprite> commentSprites = new();
+    public Text scoreAddition;
+    public Image ratingImage, commentImage;
     public Vector3 originalPosition;
     public float itemAnimationDuration = 0.4f;
     public GameObject pasteButton;
@@ -34,6 +35,7 @@ public class AnimationManager : MonoBehaviour
     public void ItemSlideInAnimation()
     {
         item = ItemManager.Instance.GetAvailableItemObject();
+        if (item == null) return;
         Item itemScript = item.GetComponent<Item>();
         if (itemScript != null)
         {
@@ -44,6 +46,7 @@ public class AnimationManager : MonoBehaviour
     public void ItemSlideOutAnimation()
     {
         item = ItemManager.Instance.GetCurrentItemObject();
+        if (item == null) return;
         Item itemScript = item.GetComponent<Item>();
         if (itemScript != null)
         {
@@ -98,7 +101,7 @@ public class AnimationManager : MonoBehaviour
         int ratingIndex = GameManager.Instance.GetRatingIndex();
         ratingSprite = ratingSprites[Mathf.Clamp(ratingIndex, 0, ratingSprites.Count - 1)];
         ratingImage.sprite = ratingSprite;
-        finalScoreText.text = $"Final Score\n {GameManager.Instance.GetScore()}";
+        commentImage.sprite = commentSprites[Mathf.Clamp(ratingIndex, 0, commentSprites.Count - 1)];
 
         endCanvasAnimator.SetTrigger("Show");
         infoCanvasAnimator.SetTrigger("Hide");

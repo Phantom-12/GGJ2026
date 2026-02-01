@@ -77,7 +77,7 @@ public class GameManager : MonoBehaviour
         GameObject itemObject = ItemManager.Instance.GetAvailableItemObject();
         Item itemScript = itemObject.GetComponent<Item>();
         itemScript.Init();
-        
+
         AnimationManager.Instance.ItemSlideInAnimation();
     }
 
@@ -99,8 +99,6 @@ public class GameManager : MonoBehaviour
         GameObject itemObject = ItemManager.Instance.GetAvailableItemObject();
         Item itemScript = itemObject.GetComponent<Item>();
         itemScript.Init();
-        
-        AnimationManager.Instance.ItemSlideInAnimation();
     }
 
     public int GetRatingIndex()
