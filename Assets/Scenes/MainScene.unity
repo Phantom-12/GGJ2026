@@ -785,7 +785,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   queue: {fileID: 1812016478}
-  totalTime: 10
+  totalTime: 90
   timeText: {fileID: 1757000823}
   scoreText: {fileID: 1946745236}
   ratingScoreList: 3c00000046000000500000005a00000064000000
@@ -894,6 +894,10 @@ PrefabInstance:
     - target: {fileID: 311310672522980630, guid: 2f9af47a3afdd054998ef2bf1dd64af5, type: 3}
       propertyPath: m_Name
       value: OperableObject
+      objectReference: {fileID: 0}
+    - target: {fileID: 1471327717536122565, guid: 2f9af47a3afdd054998ef2bf1dd64af5, type: 3}
+      propertyPath: moveDuration
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1471327717536122565, guid: 2f9af47a3afdd054998ef2bf1dd64af5, type: 3}
       propertyPath: indicatorImage

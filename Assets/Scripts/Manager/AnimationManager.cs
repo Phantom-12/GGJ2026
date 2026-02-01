@@ -105,22 +105,9 @@ public class AnimationManager : MonoBehaviour
         {
             endBackgroundImage.color = new Color(0, 0, 0, 0.4f);
         }
-
+        indicator.Hide();
         endCanvasAnimator.SetTrigger("Show");
         infoCanvasAnimator.SetTrigger("Hide");
-        indicator.Hide();
-        switch (ratingIndex)
-        {
-            case 1:
-                AudioManager.Instance.PlaySfx(AudioType.SettlementBadSfx);
-                break;
-            case 2:
-                AudioManager.Instance.PlaySfx(AudioType.SettlementNormalSfx);
-                break;
-            case 3:
-                AudioManager.Instance.PlaySfx(AudioType.SettlementPerfectSfx);
-                break;
-        }
     }
 
     public void RestartGameAnimation()

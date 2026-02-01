@@ -57,7 +57,7 @@ MonoBehaviour:
   particleAppear: {fileID: 2692220970621316260}
   particlePutDown: {fileID: 113315891824553932}
   scoreCfg: {fileID: 11400000, guid: 6a1a4db6b377b944894b67a70f31ae68, type: 2}
-  moveDuration: 5
+  moveDuration: 4
   radius: 1
   putDownShowDuration: 0.6
 --- !u!1 &1084406014979203939

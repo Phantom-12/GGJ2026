@@ -69,6 +69,23 @@ public class GameManager : MonoBehaviour
         queue.ClearQueue();
         AnimationManager.Instance.GameOverAnimation();
         operableObject.Hide();
+        int ratingIndex = GameManager.Instance.GetRatingIndex();
+        switch (ratingIndex)
+        {
+            case 5:
+            case 4:
+                AudioManager.Instance.PlaySfx(AudioType.SettlementPerfectSfx);
+                break;
+            case 3:
+            case 2:
+                AudioManager.Instance.PlaySfx(AudioType.SettlementNormalSfx);
+                break;
+            case 1:
+            case 0:
+                AudioManager.Instance.PlaySfx(AudioType.SettlementBadSfx);
+                break;
+        }
+        AudioManager.Instance.StopBGM();
     }
 
     public void StartFirstRound()
@@ -129,7 +146,9 @@ public class GameManager : MonoBehaviour
         while (true)
         {
             yield return null;
-            if (canPutDown && Input.GetKeyDown(KeyCode.Space))
+            if (canPutDown && (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.F) ||
+                               Input.GetKeyDown(KeyCode.V) || Input.GetKeyDown(KeyCode.J) ||
+                               Input.GetKeyDown(KeyCode.N)))
             {
                 PutMaskDown();
             }
