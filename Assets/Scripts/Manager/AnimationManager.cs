@@ -8,6 +8,7 @@ public class AnimationManager : MonoBehaviour
 {
     public static AnimationManager Instance;
     [SerializeField] private Indicator indicator;
+    [SerializeField] private Bubble bubble;
     public Animator startCanvasAnimator, infoCanvasAnimator, endCanvasAnimator, catAnimator;
     [SerializeField] public List<Sprite> commentSprites = new();
     [SerializeField] public List<Sprite> ratingSprites = new();
@@ -137,6 +138,7 @@ public class AnimationManager : MonoBehaviour
 
     public void ChangeCatMood(int resultCode)
     {   
+        Debug.Log(resultCode);
         if(Random.value < 0.5f)
         {
             catAnimator.SetLayerWeight(1, 1f);
@@ -175,5 +177,10 @@ public class AnimationManager : MonoBehaviour
         catAnimator.SetInteger("Result", 0);
         catAnimator.SetBool("Working", false);
         catAnimator.SetTrigger("Idle");
+    }
+
+    public void ShowBubble(int level)
+    {
+        bubble.ShowBubbleAnimation(level);
     }
 }

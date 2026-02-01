@@ -11,8 +11,7 @@ public class GameManager : MonoBehaviour
     public int totalTime = 600;
     public Text timeText, scoreText;
     public List<int> ratingScoreList = new() { 70, 100, 125, 150, 175 };
-    [SerializeField]
-    private Object operableObject;
+    [SerializeField] private Object operableObject;
     public bool canPutDown = true;
     int time = 0, score = 0;
     // Start is called before the first frame update
@@ -146,9 +145,10 @@ public class GameManager : MonoBehaviour
     private async UniTaskVoid PutMaskDownInner()
     {
         canPutDown = false;
-        var (curMood,curScore) = await operableObject.PutDown();
+        var (level,curScore) = await operableObject.PutDown();
         AnimationManager.Instance.ScoreAdditionAnimation(curScore);
-        AnimationManager.Instance.ChangeCatMood(curMood);
+        AnimationManager.Instance.ChangeCatMood(level);
+        AnimationManager.Instance.ShowBubble(level);
         StartNextRound();
     }
 

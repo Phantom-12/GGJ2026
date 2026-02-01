@@ -21,6 +21,7 @@ public class Object : MonoBehaviour
     [Header("引用")] [SerializeField] private Transform reference;
     [SerializeField] private Transform targetProxy;
     [SerializeField] private Transform target;
+    [SerializeField] private Transform targetShower;
     [SerializeField] private SpriteMask spriteMask;
     [SerializeField] private Transform handLeft;
     [SerializeField] private Transform handRight;
@@ -40,7 +41,7 @@ public class Object : MonoBehaviour
 
     private void Start()
     {
-        _spriteRenderer = target.GetComponent<SpriteRenderer>();
+        _spriteRenderer = targetShower.GetComponent<SpriteRenderer>();
         _putDownShowSpriteRenderer = putDownShower.GetComponent<SpriteRenderer>();
         targetProxy.localScale = new Vector2(0, 0);
         putDownShower.gameObject.SetActive(false);
@@ -50,13 +51,6 @@ public class Object : MonoBehaviour
 
     private void Update()
     {
-        if (_state == State.BeforeAppear)
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                Appear();
-            }
-        }
     }
 
     // 出现效果
@@ -66,6 +60,8 @@ public class Object : MonoBehaviour
         {
             return;
         }
+        targetShower.SetParent(target,true);
+        targetShower.localScale = Vector3.one;
 
         _spriteRenderer.sprite = ItemManager.Instance.GetItemMembrane();
         spriteMask.sprite = ItemManager.Instance.GetItemMembrane();
@@ -106,10 +102,12 @@ public class Object : MonoBehaviour
                 AudioManager.Instance.PlaySfx(AudioType.PerfectAlignmentSfx);
                 break;
         }
+
         await ShowPutDown();
-        await targetProxy.DOScale(Vector2.zero, 0.2f).SetEase(Ease.OutBack).AsyncWaitForCompletion();
+        targetShower.SetParent(ItemManager.Instance.GetCurrentItemObject().transform,true);
+        targetProxy.DOScale(Vector2.zero, 0.2f).SetEase(Ease.OutBack);
         _state = State.BeforeAppear;
-        return (level,score);
+        return (level, score);
     }
 
     public void Hide()
