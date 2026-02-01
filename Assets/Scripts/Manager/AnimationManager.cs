@@ -147,8 +147,8 @@ public class AnimationManager : MonoBehaviour
             catAnimator.SetLayerWeight(1, 0f);
             catAnimator.SetLayerWeight(0, 1f);
         }
-        catAnimator.SetBool("Working", false);
         catAnimator.SetInteger("Result", resultCode);
+        catAnimator.SetTrigger("SwitchMood");
         switch (resultCode)
         {
             case 1:

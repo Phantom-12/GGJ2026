@@ -690,7 +690,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   queue: {fileID: 1812016478}
-  totalTime: 5
+  totalTime: 900
   timeText: {fileID: 1757000823}
   scoreText: {fileID: 1946745236}
   ratingScoreList: 46000000640000007d00000096000000af000000
