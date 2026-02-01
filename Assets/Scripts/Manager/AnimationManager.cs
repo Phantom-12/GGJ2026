@@ -123,6 +123,16 @@ public class AnimationManager : MonoBehaviour
 
     public void ChangeCatMood(int resultCode)
     {   
+        if(Random.value < 0.5f)
+        {
+            catAnimator.SetLayerWeight(1, 1f);
+            catAnimator.SetLayerWeight(0, 0f);
+        }
+        else
+        {
+            catAnimator.SetLayerWeight(1, 0f);
+            catAnimator.SetLayerWeight(0, 1f);
+        }
         catAnimator.SetBool("Working", false);
         catAnimator.SetInteger("Result", resultCode);
     }
