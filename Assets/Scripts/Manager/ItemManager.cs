@@ -79,6 +79,7 @@ public class ItemManager : MonoBehaviour
 
     public void ResetItems()
     {
+        activeItemCode = 1;
         item1.SetActive(false);
         item2.SetActive(false);
     }

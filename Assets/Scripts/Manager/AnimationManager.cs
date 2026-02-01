@@ -11,11 +11,13 @@ public class AnimationManager : MonoBehaviour
     public Animator startCanvasAnimator, infoCanvasAnimator, endCanvasAnimator, catAnimator;
     [SerializeField] public List<Sprite> commentSprites = new();
     [SerializeField] public List<Sprite> ratingSprites = new();
+    [SerializeField] public List<Sprite> endBgSprites = new();
+
+    public Image endBackgroundImage;
     public Text scoreAddition;
     public Image ratingImage, commentImage;
     public Vector3 originalPosition;
     public float itemAnimationDuration = 0.4f;
-    public GameObject pasteButton;
     private GameObject item;
     private Sprite ratingSprite;
 
@@ -93,6 +95,15 @@ public class AnimationManager : MonoBehaviour
         ratingSprite = ratingSprites[Mathf.Clamp(ratingIndex, 0, ratingSprites.Count - 1)];
         ratingImage.sprite = ratingSprite;
         commentImage.sprite = commentSprites[Mathf.Clamp(ratingIndex, 0, commentSprites.Count - 1)];
+        Sprite endBg = endBgSprites[Mathf.Clamp(ratingIndex, 0, endBgSprites.Count - 1)];
+        if (endBg != null)
+        {
+            endBackgroundImage.color = Color.white;
+            endBackgroundImage.sprite = endBg;
+        } else
+        {
+            endBackgroundImage.color = new Color(0, 0, 0, 0.4f);
+        }
 
         endCanvasAnimator.SetTrigger("Show");
         infoCanvasAnimator.SetTrigger("Hide");
@@ -155,7 +166,14 @@ public class AnimationManager : MonoBehaviour
     public void CatStartWorking()
     {
         catAnimator.SetInteger("Result", 0);
-        catAnimator.SetTrigger("Idle");
         catAnimator.SetBool("Working", true);
+        catAnimator.SetTrigger("Idle");
+    }
+
+    public void SetCatIdle()
+    {
+        catAnimator.SetInteger("Result", 0);
+        catAnimator.SetBool("Working", false);
+        catAnimator.SetTrigger("Idle");
     }
 }

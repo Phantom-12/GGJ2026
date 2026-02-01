@@ -46,12 +46,14 @@ public class GameManager : MonoBehaviour
         StartCoroutine(Timer());
         StartCoroutine(PlayerPutDownListener());
         queue.Init();
+        AnimationManager.Instance.SetCatIdle();
         AudioManager.Instance.PlayBGM(AudioType.LevelMusic);
     }
 
     public void RestartGame()
     {
         AnimationManager.Instance.RestartGameAnimation();
+        ItemManager.Instance.ResetItems();
         StartGame();
     }
 
@@ -143,7 +145,7 @@ public class GameManager : MonoBehaviour
 
     private async UniTaskVoid PutMaskDownInner()
     {
-        GameManager.Instance.canPutDown = false;
+        canPutDown = false;
         var (curMood,curScore) = await operableObject.PutDown();
         AnimationManager.Instance.ScoreAdditionAnimation(curScore);
         AnimationManager.Instance.ChangeCatMood(curMood);

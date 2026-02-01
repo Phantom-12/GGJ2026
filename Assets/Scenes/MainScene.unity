@@ -622,7 +622,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 360516120}
-  - component: {fileID: 360516119}
+  - component: {fileID: 360516123}
   - component: {fileID: 360516118}
   - component: {fileID: 360516121}
   - component: {fileID: 360516122}
@@ -646,49 +646,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   queue: {fileID: 1812016478}
-  totalTime: 90
+  totalTime: 5
   timeText: {fileID: 1757000823}
   scoreText: {fileID: 1946745236}
   ratingScoreList: 46000000640000007d00000096000000af000000
   operableObject: {fileID: 1626638227}
   canPutDown: 1
---- !u!114 &360516119
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 360516117}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fdcff2d6ad6384631abf1fe631448319, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  indicator: {fileID: 958202168}
-  startCanvasAnimator: {fileID: 1794071925}
-  infoCanvasAnimator: {fileID: 1432227627}
-  endCanvasAnimator: {fileID: 153815860}
-  catAnimator: {fileID: 776904247}
-  commentSprites:
-  - {fileID: 725639500, guid: 9ef74e4a6c08247f1b2ced38911558b4, type: 3}
-  - {fileID: 1538335428, guid: 9ef74e4a6c08247f1b2ced38911558b4, type: 3}
-  - {fileID: 757166218, guid: 9ef74e4a6c08247f1b2ced38911558b4, type: 3}
-  - {fileID: -550521780, guid: 9ef74e4a6c08247f1b2ced38911558b4, type: 3}
-  - {fileID: -1437435775, guid: 9ef74e4a6c08247f1b2ced38911558b4, type: 3}
-  - {fileID: 1177302175, guid: 9ef74e4a6c08247f1b2ced38911558b4, type: 3}
-  ratingSprites:
-  - {fileID: -854347309, guid: ebdf028b3c3e8435f962eadeeac87a08, type: 3}
-  - {fileID: 1726573302, guid: ebdf028b3c3e8435f962eadeeac87a08, type: 3}
-  - {fileID: 926651538, guid: ebdf028b3c3e8435f962eadeeac87a08, type: 3}
-  - {fileID: -1494057622, guid: ebdf028b3c3e8435f962eadeeac87a08, type: 3}
-  - {fileID: 1970319683, guid: ebdf028b3c3e8435f962eadeeac87a08, type: 3}
-  - {fileID: 121690168, guid: ebdf028b3c3e8435f962eadeeac87a08, type: 3}
-  scoreAddition: {fileID: 1201117251}
-  ratingImage: {fileID: 1627723660}
-  commentImage: {fileID: 734384998}
-  originalPosition: {x: 0, y: 0.5, z: 0}
-  itemAnimationDuration: 0.4
-  pasteButton: {fileID: 112964133}
 --- !u!4 &360516120
 Transform:
   m_ObjectHideFlags: 0
@@ -736,6 +699,50 @@ MonoBehaviour:
   bgmVolume: 0.5
   sfxVolume: 1
   sfxPoolSize: 8
+--- !u!114 &360516123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 360516117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdcff2d6ad6384631abf1fe631448319, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  indicator: {fileID: 958202168}
+  startCanvasAnimator: {fileID: 1794071925}
+  infoCanvasAnimator: {fileID: 1432227627}
+  endCanvasAnimator: {fileID: 153815860}
+  catAnimator: {fileID: 776904247}
+  commentSprites:
+  - {fileID: 1538335428, guid: 9ef74e4a6c08247f1b2ced38911558b4, type: 3}
+  - {fileID: 725639500, guid: 9ef74e4a6c08247f1b2ced38911558b4, type: 3}
+  - {fileID: 757166218, guid: 9ef74e4a6c08247f1b2ced38911558b4, type: 3}
+  - {fileID: -1903843404, guid: 9ef74e4a6c08247f1b2ced38911558b4, type: 3}
+  - {fileID: -1437435775, guid: 9ef74e4a6c08247f1b2ced38911558b4, type: 3}
+  - {fileID: 1177302175, guid: 9ef74e4a6c08247f1b2ced38911558b4, type: 3}
+  ratingSprites:
+  - {fileID: -854347309, guid: ebdf028b3c3e8435f962eadeeac87a08, type: 3}
+  - {fileID: 1726573302, guid: ebdf028b3c3e8435f962eadeeac87a08, type: 3}
+  - {fileID: 926651538, guid: ebdf028b3c3e8435f962eadeeac87a08, type: 3}
+  - {fileID: -1494057622, guid: ebdf028b3c3e8435f962eadeeac87a08, type: 3}
+  - {fileID: 1970319683, guid: ebdf028b3c3e8435f962eadeeac87a08, type: 3}
+  - {fileID: 121690168, guid: ebdf028b3c3e8435f962eadeeac87a08, type: 3}
+  endBgSprites:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 21300000, guid: aca117106d7c2425ab80fabbab8d0e30, type: 3}
+  endBackgroundImage: {fileID: 1276554637}
+  scoreAddition: {fileID: 1201117251}
+  ratingImage: {fileID: 1627723660}
+  commentImage: {fileID: 734384998}
+  originalPosition: {x: 0, y: 0, z: 0}
+  itemAnimationDuration: 0.4
 --- !u!1001 &377099435
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1065,6 +1072,7 @@ GameObject:
   - component: {fileID: 566506054}
   - component: {fileID: 566506056}
   - component: {fileID: 566506057}
+  - component: {fileID: 566506055}
   m_Layer: 5
   m_Name: BottomColumn
   m_TagString: Untagged
@@ -1833,7 +1841,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1263, y: 576}
+  m_AnchoredPosition: {x: 1260, y: 485}
   m_SizeDelta: {x: 300, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &958202168
@@ -2011,7 +2019,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 360516119}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: AnimationManager, Assembly-CSharp
         m_MethodName: ScoreAdditionAnimation
         m_Mode: 3
@@ -2504,7 +2512,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 360516119}
+      - m_Target: {fileID: 360516123}
         m_TargetAssemblyTypeName: AnimationManager, Assembly-CSharp
         m_MethodName: StartGameAnimation
         m_Mode: 1
@@ -2649,15 +2657,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: aca117106d7c2425ab80fabbab8d0e30, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -3098,7 +3106,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 22, y: -2416}
+  m_AnchoredPosition: {x: 915, y: -2416}
   m_SizeDelta: {x: 1830, y: 2350}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1543100529
@@ -3891,6 +3899,7 @@ GameObject:
   - component: {fileID: 1812016476}
   - component: {fileID: 1812016477}
   - component: {fileID: 1812016478}
+  - component: {fileID: 1812016479}
   m_Layer: 5
   m_Name: CustomerQueue
   m_TagString: Untagged
