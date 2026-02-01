@@ -3,18 +3,16 @@ using System.Collections.Generic;
 
 public class AudioManager : MonoBehaviour
 {
+    public AudioLib audioLibrary;
     public static AudioManager Instance { get; private set; }
 
-    [Header("Audio Sources")]
-    private AudioSource _bgmSource;
+    [Header("Audio Sources")] private AudioSource _bgmSource;
     private List<AudioSource> _sfxSources = new List<AudioSource>();
 
-    [Header("Volume")]
-    [Range(0, 1)] public float bgmVolume = 1f;
+    [Header("Volume")] [Range(0, 1)] public float bgmVolume = 1f;
     [Range(0, 1)] public float sfxVolume = 1f;
 
-    [Header("SFX Pool")]
-    public int sfxPoolSize = 8;
+    [Header("SFX Pool")] public int sfxPoolSize = 8;
 
     void Awake()
     {
@@ -28,6 +26,7 @@ public class AudioManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         InitAudioSources();
+        audioLibrary.Init();
     }
 
     void InitAudioSources()
@@ -48,8 +47,9 @@ public class AudioManager : MonoBehaviour
 
     // ================= BGM =================
 
-    public void PlayBGM(AudioClip clip, bool loop = true)
+    public void PlayBGM(AudioType clipType, bool loop = true)
     {
+        var clip = audioLibrary.GetAudio(clipType);
         if (_bgmSource.clip == clip && _bgmSource.isPlaying)
             return;
 
@@ -66,12 +66,12 @@ public class AudioManager : MonoBehaviour
 
     // ================= SFX =================
 
-    public void PlaySfx(AudioClip clip)
+    public void PlaySfx(AudioType clipType)
     {
+        var clip = audioLibrary.GetAudio(clipType);
         AudioSource source = GetAvailableSfxSource();
-        if (source == null)
+        if (!source)
         {
-            Debug.LogWarning("No available SFX AudioSource!");
             return;
         }
 
@@ -87,6 +87,7 @@ public class AudioManager : MonoBehaviour
             if (!sfx.isPlaying)
                 return sfx;
         }
+
         return null;
     }
 
@@ -101,5 +102,11 @@ public class AudioManager : MonoBehaviour
     public void SetSfxVolume(float volume)
     {
         sfxVolume = volume;
+    }
+    
+    // 特写
+    public void PlayButtonClickSfx()
+    {
+        PlaySfx(AudioType.ButtonClickSfx);
     }
 }

@@ -41,6 +41,7 @@ public class AnimationManager : MonoBehaviour
         {
             itemScript.SlideIn();
         }
+        AudioManager.Instance.PlaySfx(AudioType.ItemEnterSfx);
     }
 
     public void ItemSlideOutAnimation()
@@ -106,6 +107,18 @@ public class AnimationManager : MonoBehaviour
         endCanvasAnimator.SetTrigger("Show");
         infoCanvasAnimator.SetTrigger("Hide");
         indicator.Hide();
+        switch (ratingIndex)
+        {
+            case 1:
+                AudioManager.Instance.PlaySfx(AudioType.SettlementBadSfx);
+                break;
+            case 2:
+                AudioManager.Instance.PlaySfx(AudioType.SettlementNormalSfx);
+                break;
+            case 3:
+                AudioManager.Instance.PlaySfx(AudioType.SettlementPerfectSfx);
+                break;
+        }
     }
 
     public void RestartGameAnimation()
@@ -135,6 +148,18 @@ public class AnimationManager : MonoBehaviour
         }
         catAnimator.SetBool("Working", false);
         catAnimator.SetInteger("Result", resultCode);
+        switch (resultCode)
+        {
+            case 1:
+                AudioManager.Instance.PlaySfx(AudioType.CatBadSfx);
+                break;
+            case 2:
+                AudioManager.Instance.PlaySfx(AudioType.CatNormalSfx);
+                break;
+            case 3:
+                AudioManager.Instance.PlaySfx(AudioType.CatPerfectSfx);
+                break;
+        }
     }
 
     public void CatStartWorking()

@@ -7,7 +7,7 @@ using DG.Tweening;
 public class Indicator : MonoBehaviour
 {
     [SerializeField] private Object operableObject;
-    [SerializeField] private Color[] scoreColors;
+    [SerializeField] private Sprite[] scoreSprites;
 
     private Image _image;
     private int _state = 0;
@@ -21,12 +21,12 @@ public class Indicator : MonoBehaviour
 
     private void Update()
     {
-        if(!_show)
+        if (!_show)
             return;
         var (level, _) = operableObject.CalcScore();
         if (level != _state)
         {
-            _image.color = scoreColors[level - 1];
+            _image.sprite = scoreSprites[level - 1];
             _state = level;
             ChangeState(level).Forget();
         }

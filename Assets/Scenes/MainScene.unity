@@ -866,7 +866,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47ba46d0d51776d4897bba92f0aa8d0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgmVolume: 1
+  audioLibrary: {fileID: 11400000, guid: a3a2cd160a6db7e41bb595822ddd2088, type: 2}
+  bgmVolume: 0.5
   sfxVolume: 1
   sfxPoolSize: 8
 --- !u!1001 &377099435
@@ -1155,7 +1156,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 566506053}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -1764,6 +1765,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 360516122}
+        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
+        m_MethodName: PlayButtonClickSfx
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &939850437
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1841,7 +1854,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 1009504062, guid: ada763df1c3d36f41948f9578223d6ff, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1891,10 +1904,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   operableObject: {fileID: 1626638227}
-  scoreColors:
-  - {r: 1, g: 0.018721009, b: 0, a: 1}
-  - {r: 0.9866247, g: 1, b: 0, a: 1}
-  - {r: 0, g: 1, b: 0.040503502, a: 1}
+  scoreSprites:
+  - {fileID: 2070520924, guid: ada763df1c3d36f41948f9578223d6ff, type: 3}
+  - {fileID: 1710562735, guid: ada763df1c3d36f41948f9578223d6ff, type: 3}
+  - {fileID: 1009504062, guid: ada763df1c3d36f41948f9578223d6ff, type: 3}
 --- !u!1 &1005013648
 GameObject:
   m_ObjectHideFlags: 0
@@ -2486,6 +2499,18 @@ MonoBehaviour:
       - m_Target: {fileID: 360516118}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
         m_MethodName: StartGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 360516122}
+        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
+        m_MethodName: PlayButtonClickSfx
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3441,6 +3466,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 360516122}
+        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
+        m_MethodName: PlayButtonClickSfx
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1641973994
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3983,7 +4020,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1812016473}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 

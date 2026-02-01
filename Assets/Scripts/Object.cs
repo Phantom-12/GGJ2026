@@ -89,13 +89,34 @@ public class Object : MonoBehaviour
             return (0, 0);
         }
 
+        var (level, score) = CalcScore();
+
         _state = State.PutDown;
         StopMove();
         particlePutDown.Play();
+        switch (level)
+        {
+            case 1:
+                AudioManager.Instance.PlaySfx(AudioType.FailAlignmentSfx);
+                break;
+            case 2:
+                AudioManager.Instance.PlaySfx(AudioType.NormalAlignmentSfx);
+                break;
+            case 3:
+                AudioManager.Instance.PlaySfx(AudioType.PerfectAlignmentSfx);
+                break;
+        }
         await ShowPutDown();
         await targetProxy.DOScale(Vector2.zero, 0.2f).SetEase(Ease.OutBack).AsyncWaitForCompletion();
         _state = State.BeforeAppear;
-        return CalcScore();
+        return (level,score);
+    }
+
+    public void Hide()
+    {
+        _state = State.BeforeAppear;
+        targetProxy.localScale = Vector3.zero;
+        StopMove();
     }
 
     // 计算距离

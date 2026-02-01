@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
             Instance.Start();
         }
+        AudioManager.Instance.PlayBGM(AudioType.StartPageMusic);
     }
 
     public int GetScore()
@@ -43,6 +44,7 @@ public class GameManager : MonoBehaviour
         StopAllCoroutines();
         StartCoroutine(Timer());
         queue.Init();
+        AudioManager.Instance.PlayBGM(AudioType.LevelMusic);
     }
 
     public void RestartGame()
@@ -54,6 +56,7 @@ public class GameManager : MonoBehaviour
     public void ExitToMainMenu()
     {
         AnimationManager.Instance.ReturnToStartAnimation();
+        AudioManager.Instance.PlayBGM(AudioType.StartPageMusic);
     }
 
     public void GameOver()
@@ -62,6 +65,7 @@ public class GameManager : MonoBehaviour
         ItemManager.Instance.ResetItems();
         queue.ClearQueue();
         AnimationManager.Instance.GameOverAnimation();
+        operableObject.Hide();
     }
 
     public void StartFirstRound()
