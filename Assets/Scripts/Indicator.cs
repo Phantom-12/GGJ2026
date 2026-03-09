@@ -26,7 +26,8 @@ public class Indicator : MonoBehaviour
         var (level, _) = operableObject.CalcScore();
         if (level != _state)
         {
-            _image.sprite = scoreSprites[level - 1];
+            int index = Mathf.Clamp(level - 1, 0, scoreSprites.Length - 1);
+            _image.sprite = scoreSprites[index];
             _state = level;
             ChangeState(level).Forget();
         }

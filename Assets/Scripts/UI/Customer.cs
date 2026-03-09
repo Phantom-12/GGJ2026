@@ -24,6 +24,13 @@ public class Customer : MonoBehaviour
         customerImage = GetComponent<Image>();
 	}
 
+    private void OnDisable()
+    {
+        // JumpRoutine 由 Unity 在 SetActive(false) 时自动停止，但 jumpRoutine 引用不会自动置 null。
+        // 若不手动重置，从对象池复用时 isJumping 将永远为 true，导致 CustomerJumpCoroutine 永久阻塞。
+        jumpRoutine = null;
+    }
+
     public string GetCustomerName()
     {
         return customerName;

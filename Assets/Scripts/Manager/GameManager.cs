@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Object operableObject;
     public bool canPutDown = true;
     int time = 0, score = 0;
+    private System.Threading.CancellationTokenSource _putDownCts;
     // Start is called before the first frame update
     public void Start()
     {
@@ -39,6 +40,7 @@ public class GameManager : MonoBehaviour
     {
         time = 0;
         score = 0;
+        canPutDown = false;
         timeText.text = "Time 00:00:00";
         scoreText.text = "Score 0";
         StopAllCoroutines();
@@ -64,7 +66,10 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
+        _putDownCts?.Cancel();
+        _putDownCts = null;
         StopAllCoroutines();
+        AnimationManager.Instance.ItemSlideOutAnimation();
         ItemManager.Instance.ResetItems();
         queue.ClearQueue();
         AnimationManager.Instance.GameOverAnimation();
@@ -107,7 +112,7 @@ public class GameManager : MonoBehaviour
     {
         queue.CustomerLeave();
 
-        AnimationManager.Instance.ItemSlideOutAnimation();
+        // ItemSlideOutAnimation 已由 CustomerLeave() 内部调用，此处无需重复
         ItemManager.Instance.SwitchActiveItem();
 
         if(queue.IsFirstCustomerSpecial())
@@ -158,13 +163,16 @@ public class GameManager : MonoBehaviour
     /* TODO: 将膜放下，并计分的函数 */
     public void PutMaskDown()
     {
-        PutMaskDownInner().Forget();
+        _putDownCts?.Cancel();
+        _putDownCts = new System.Threading.CancellationTokenSource();
+        PutMaskDownInner(_putDownCts.Token).Forget();
     }
 
-    private async UniTaskVoid PutMaskDownInner()
+    private async UniTaskVoid PutMaskDownInner(System.Threading.CancellationToken ct)
     {
         canPutDown = false;
         var (level,curScore) = await operableObject.PutDown();
+        if (ct.IsCancellationRequested) return;
         AnimationManager.Instance.ScoreAdditionAnimation(curScore);
         AnimationManager.Instance.ChangeCatMood(level);
         AnimationManager.Instance.ShowBubble(level);

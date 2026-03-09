@@ -45,6 +45,7 @@ public class CustomerQueue : MonoBehaviour
             customer.SetActive(false);
         }
         customerQueue.Clear();
+        isQueueMoving = false;
     }
 
     IEnumerator InitCustomerQueue()
