@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     public Text timeText, scoreText, multipleText, comboText;
     public Slider comboSlider;
     public int comboTimeWindow = 5;
-    [SerializeField] private Object operableObject;
+    [SerializeField] private OperableObject operableObject;
     [SerializeField] private Combo2Multiple combo2Multiple;
     [SerializeField] private Score2Rating score2Rating;
     public bool canPutDown = true;
@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     private Coroutine _comboTimerCoroutine;
 
     float score = 0, multiple = 1f;
+
     // Start is called before the first frame update
     public void Start()
     {
@@ -35,6 +36,7 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
             Instance.Start();
         }
+
         AudioManager.Instance.PlayBGM(AudioType.StartPageMusic);
     }
 
@@ -61,12 +63,15 @@ public class GameManager : MonoBehaviour
             StopCoroutine(_comboTimerCoroutine);
             _comboTimerCoroutine = null;
         }
+
         StopAllCoroutines();
         StartCoroutine(Timer());
         StartCoroutine(PlayerPutDownListener());
         queue.Init();
         AnimationManager.Instance.SetCatIdle();
         AudioManager.Instance.PlayBGM(AudioType.LevelMusic);
+        AudioManager.Instance.SetBGMSpeed(1f);
+        AudioManager.Instance.StopAllSfx();
     }
 
     public void HideComboUI()
@@ -94,12 +99,12 @@ public class GameManager : MonoBehaviour
     {
         AnimationManager.Instance.ReturnToStartAnimation();
         AudioManager.Instance.PlayBGM(AudioType.StartPageMusic);
+        AudioManager.Instance.SetBGMSpeed(1f);
     }
 
     public void GameOver()
     {
-        _putDownCts?.Cancel();
-        _putDownCts = null;
+        CancelPutDownTask();
         StopAllCoroutines();
         AnimationManager.Instance.ItemSlideOutAnimation();
         ItemManager.Instance.ResetItems();
@@ -122,15 +127,17 @@ public class GameManager : MonoBehaviour
                 AudioManager.Instance.PlaySfx(AudioType.SettlementBadSfx);
                 break;
         }
+
         AudioManager.Instance.StopBGM();
     }
 
     public void StartFirstRound()
     {
-        if(queue.IsFirstCustomerSpecial())
+        if (queue.IsFirstCustomerSpecial())
         {
             ItemManager.Instance.SetCurrentItemName(queue.GetNameOfFirstCustomer());
-        } else
+        }
+        else
         {
             ItemManager.Instance.SetCurrentItemName("");
         }
@@ -146,10 +153,11 @@ public class GameManager : MonoBehaviour
 
         ItemManager.Instance.SwitchActiveItem();
 
-        if(queue.IsFirstCustomerSpecial())
+        if (queue.IsFirstCustomerSpecial())
         {
             ItemManager.Instance.SetCurrentItemName(queue.GetNameOfFirstCustomer());
-        } else
+        }
+        else
         {
             ItemManager.Instance.SetCurrentItemName("");
         }
@@ -173,8 +181,8 @@ public class GameManager : MonoBehaviour
                 break;
             }
         }
+
         return rating;
-        
     }
 
     IEnumerator PlayerPutDownListener()
@@ -194,9 +202,16 @@ public class GameManager : MonoBehaviour
     /* TODO: 将膜放下，并计分的函数 */
     public void PutMaskDown()
     {
-        _putDownCts?.Cancel();
+        CancelPutDownTask();
         _putDownCts = new System.Threading.CancellationTokenSource();
         PutMaskDownInner(_putDownCts.Token).Forget();
+    }
+
+    private void CancelPutDownTask()
+    {
+        _putDownCts?.Cancel();
+        _putDownCts?.Dispose();
+        _putDownCts = null;
     }
 
     private async UniTaskVoid PutMaskDownInner(System.Threading.CancellationToken ct)
@@ -214,13 +229,14 @@ public class GameManager : MonoBehaviour
             if (_comboTimerCoroutine != null)
                 StopCoroutine(_comboTimerCoroutine);
             _comboTimerCoroutine = StartCoroutine(ComboTimer());
-        } 
+        }
         else
         {
             comboCount = 0;
             multiple = 1f;
             HideComboUI();
             operableObject.ResetMoveDuration();
+            AudioManager.Instance.SetBGMSpeed(1f, 0.2f);
             if (_comboTimerCoroutine != null)
                 StopCoroutine(_comboTimerCoroutine);
             _comboTimerCoroutine = null;
@@ -233,13 +249,17 @@ public class GameManager : MonoBehaviour
         StartNextRound();
     }
 
-    private int GetComboDataIndex(){
-        foreach(var data in combo2Multiple.data){
-            if(comboCount <= data.comboTime){
+    private int GetComboDataIndex()
+    {
+        foreach (var data in combo2Multiple.data)
+        {
+            if (comboCount <= data.comboTime)
+            {
                 return combo2Multiple.data.IndexOf(data);
             }
         }
-        return -1;
+
+        return combo2Multiple.data.Count - 1;
     }
 
     private void UpdateComboUI()
@@ -254,6 +274,7 @@ public class GameManager : MonoBehaviour
         comboText.text = $"Combo {comboCount}";
         comboText.color = data.color;
         comboSlider.fillRect.GetComponent<Image>().color = data.color;
+        AudioManager.Instance.SetBGMSpeed(data.bgmSpeedMultiple, 0.2f);
     }
 
     private void ChangeObjectSpeed()
@@ -274,11 +295,13 @@ public class GameManager : MonoBehaviour
             comboSlider.value = 1f - elapsed / comboTimeWindow;
             yield return null;
         }
+
         comboCount = 0;
         multiple = 1f;
         _comboTimerCoroutine = null;
         HideComboUI();
         operableObject.ResetMoveDuration();
+        AudioManager.Instance.SetBGMSpeed(1f, 0.2f);
     }
 
     public void AddScore(int amount)
@@ -294,8 +317,9 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(1f);
             time--;
-            timeText.text = $"Time {time/3600:D2}:{time/60%60:D2}:{time%60:D2}";
+            timeText.text = $"Time {time / 3600:D2}:{time / 60 % 60:D2}:{time % 60:D2}";
         }
+
         GameOver();
     }
 
