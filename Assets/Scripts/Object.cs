@@ -34,6 +34,7 @@ public class Object : MonoBehaviour
     [SerializeField] private float radius = 2f;
     [SerializeField] private float putDownShowDuration = 2f;
 
+    private float _moveDurationDefault;
     private State _state = State.BeforeAppear;
     private Tween _moveTween;
     private SpriteRenderer _spriteRenderer;
@@ -43,6 +44,7 @@ public class Object : MonoBehaviour
     {
         _spriteRenderer = targetShower.GetComponent<SpriteRenderer>();
         _putDownShowSpriteRenderer = putDownShower.GetComponent<SpriteRenderer>();
+        _moveDurationDefault = moveDuration;
         targetProxy.localScale = new Vector2(0, 0);
         putDownShower.gameObject.SetActive(false);
         gameObject.SetActive(false);
@@ -51,6 +53,16 @@ public class Object : MonoBehaviour
 
     private void Update()
     {
+    }
+
+    public void SetMoveDuration(float duration)
+    {
+        moveDuration = duration;
+    }
+
+    public void ResetMoveDuration()
+    {
+        moveDuration = _moveDurationDefault;
     }
 
     // 出现效果

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,12 +10,18 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public CustomerQueue queue;
     public int totalTime = 600;
-    public Text timeText, scoreText;
-    public List<int> ratingScoreList = new() { 70, 100, 125, 150, 175 };
+    public Text timeText, scoreText, multipleText, comboText;
+    public Slider comboSlider;
+    public int comboTimeWindow = 5;
     [SerializeField] private Object operableObject;
+    [SerializeField] private Combo2Multiple combo2Multiple;
+    [SerializeField] private Score2Rating score2Rating;
     public bool canPutDown = true;
-    int time = 0, score = 0;
+    int time = 0, comboCount = 0;
     private System.Threading.CancellationTokenSource _putDownCts;
+    private Coroutine _comboTimerCoroutine;
+
+    float score = 0, multiple = 1f;
     // Start is called before the first frame update
     public void Start()
     {
@@ -33,7 +40,7 @@ public class GameManager : MonoBehaviour
 
     public int GetScore()
     {
-        return score;
+        return (int)score;
     }
 
     public void StartGame()
@@ -41,14 +48,39 @@ public class GameManager : MonoBehaviour
         time = 0;
         score = 0;
         canPutDown = false;
+        comboCount = 0;
+        multiple = 1f;
         timeText.text = "Time 00:00:00";
         scoreText.text = "Score 0";
+        multipleText.text = "x1.0";
+        comboText.text = "Combo 0";
+
+        HideComboUI();
+        if (_comboTimerCoroutine != null)
+        {
+            StopCoroutine(_comboTimerCoroutine);
+            _comboTimerCoroutine = null;
+        }
         StopAllCoroutines();
         StartCoroutine(Timer());
         StartCoroutine(PlayerPutDownListener());
         queue.Init();
         AnimationManager.Instance.SetCatIdle();
         AudioManager.Instance.PlayBGM(AudioType.LevelMusic);
+    }
+
+    public void HideComboUI()
+    {
+        multipleText.gameObject.SetActive(false);
+        comboSlider.gameObject.SetActive(false);
+        comboText.gameObject.SetActive(false);
+    }
+
+    public void ShowComboUI()
+    {
+        multipleText.gameObject.SetActive(true);
+        comboSlider.gameObject.SetActive(true);
+        comboText.gameObject.SetActive(true);
     }
 
     public void RestartGame()
@@ -112,7 +144,6 @@ public class GameManager : MonoBehaviour
     {
         queue.CustomerLeave();
 
-        // ItemSlideOutAnimation 已由 CustomerLeave() 内部调用，此处无需重复
         ItemManager.Instance.SwitchActiveItem();
 
         if(queue.IsFirstCustomerSpecial())
@@ -131,11 +162,11 @@ public class GameManager : MonoBehaviour
     public int GetRatingIndex()
     {
         int rating = 0;
-        foreach (int threshold in ratingScoreList)
+        foreach (var data in score2Rating.data)
         {
-            if (score >= threshold)
+            if (score >= data.score)
             {
-                rating++;
+                rating = score2Rating.data.IndexOf(data);
             }
             else
             {
@@ -171,18 +202,89 @@ public class GameManager : MonoBehaviour
     private async UniTaskVoid PutMaskDownInner(System.Threading.CancellationToken ct)
     {
         canPutDown = false;
-        var (level,curScore) = await operableObject.PutDown();
+        var (level, curScore) = await operableObject.PutDown();
         if (ct.IsCancellationRequested) return;
-        AnimationManager.Instance.ScoreAdditionAnimation(curScore);
+
+        if (level >= combo2Multiple.comboLevel)
+        {
+            comboCount++;
+            ShowComboUI();
+            UpdateComboUI();
+            ChangeObjectSpeed();
+            if (_comboTimerCoroutine != null)
+                StopCoroutine(_comboTimerCoroutine);
+            _comboTimerCoroutine = StartCoroutine(ComboTimer());
+        } 
+        else
+        {
+            comboCount = 0;
+            multiple = 1f;
+            HideComboUI();
+            operableObject.ResetMoveDuration();
+            if (_comboTimerCoroutine != null)
+                StopCoroutine(_comboTimerCoroutine);
+            _comboTimerCoroutine = null;
+        }
+
+        int finalScore = Mathf.RoundToInt(curScore * multiple);
+        AnimationManager.Instance.ScoreAdditionAnimation(finalScore);
         AnimationManager.Instance.ChangeCatMood(level);
         AnimationManager.Instance.ShowBubble(level);
         StartNextRound();
     }
 
+    private int GetComboDataIndex(){
+        foreach(var data in combo2Multiple.data){
+            if(comboCount <= data.comboTime){
+                return combo2Multiple.data.IndexOf(data);
+            }
+        }
+        return -1;
+    }
+
+    private void UpdateComboUI()
+    {
+        if (combo2Multiple == null || combo2Multiple.data.Count == 0) return;
+        int index = Mathf.Clamp(GetComboDataIndex(), 0, combo2Multiple.data.Count - 1);
+        var data = combo2Multiple.data[index];
+
+        multiple = data.scoreMultiple;
+        multipleText.text = $"x{multiple:F1}";
+        multipleText.color = data.color;
+        comboText.text = $"Combo {comboCount}";
+        comboText.color = data.color;
+        comboSlider.fillRect.GetComponent<Image>().color = data.color;
+    }
+
+    private void ChangeObjectSpeed()
+    {
+        if (combo2Multiple == null || combo2Multiple.data.Count == 0) return;
+        int index = Mathf.Clamp(GetComboDataIndex(), 0, combo2Multiple.data.Count - 1);
+        var data = combo2Multiple.data[index];
+        operableObject.SetMoveDuration(data.moveDuration);
+    }
+
+    IEnumerator ComboTimer()
+    {
+        comboSlider.value = 1f;
+        float elapsed = 0f;
+        while (elapsed < comboTimeWindow)
+        {
+            elapsed += Time.deltaTime;
+            comboSlider.value = 1f - elapsed / comboTimeWindow;
+            yield return null;
+        }
+        comboCount = 0;
+        multiple = 1f;
+        _comboTimerCoroutine = null;
+        HideComboUI();
+        operableObject.ResetMoveDuration();
+    }
+
     public void AddScore(int amount)
     {
         score += amount;
-        scoreText.text = $"Score {score}";
+        scoreText.text = $"Score {(int)score}";
     }
 
     IEnumerator Timer()

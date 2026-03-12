@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
 public class AnimationManager : MonoBehaviour
@@ -9,10 +10,8 @@ public class AnimationManager : MonoBehaviour
     public static AnimationManager Instance;
     [SerializeField] private Indicator indicator;
     [SerializeField] private Bubble bubble;
+    [SerializeField] Score2Rating score2Rating;
     public Animator startCanvasAnimator, infoCanvasAnimator, endCanvasAnimator, catAnimator;
-    [SerializeField] public List<Sprite> commentSprites = new();
-    [SerializeField] public List<Sprite> ratingSprites = new();
-    [SerializeField] public List<Sprite> endBgSprites = new();
 
     public Image endBackgroundImage;
     public Text scoreAddition;
@@ -67,7 +66,7 @@ public class AnimationManager : MonoBehaviour
     IEnumerator ScoreAdditionRoutine(int addition)
     {
         RectTransform scoreAdditionRect = scoreAddition.GetComponent<RectTransform>();
-        scoreAdditionRect.anchoredPosition = new Vector3(0, -160, 0);
+        scoreAdditionRect.anchoredPosition = new Vector3(-830, 0, 0);
         CanvasGroup canvasGroup = scoreAddition.GetComponent<CanvasGroup>();
         canvasGroup.alpha = 1f;
         yield return new WaitForSeconds(0.5f);
@@ -93,18 +92,9 @@ public class AnimationManager : MonoBehaviour
     public void GameOverAnimation()
     {
         int ratingIndex = GameManager.Instance.GetRatingIndex();
-        ratingSprite = ratingSprites[Mathf.Clamp(ratingIndex, 0, ratingSprites.Count - 1)];
-        ratingImage.sprite = ratingSprite;
-        commentImage.sprite = commentSprites[Mathf.Clamp(ratingIndex, 0, commentSprites.Count - 1)];
-        Sprite endBg = endBgSprites[Mathf.Clamp(ratingIndex, 0, endBgSprites.Count - 1)];
-        if (endBg != null)
-        {
-            endBackgroundImage.color = Color.white;
-            endBackgroundImage.sprite = endBg;
-        } else
-        {
-            endBackgroundImage.color = new Color(0, 0, 0, 0.4f);
-        }
+        ratingImage.sprite = score2Rating.data[ratingIndex].ratingSprite;
+        commentImage.sprite = score2Rating.data[ratingIndex].commentSprite;
+        endBackgroundImage.sprite = score2Rating.data[ratingIndex].endBgSprite;
         indicator.Hide();
         endCanvasAnimator.SetTrigger("Show");
         infoCanvasAnimator.SetTrigger("Hide");
@@ -125,15 +115,10 @@ public class AnimationManager : MonoBehaviour
 
     public void ChangeCatMood(int resultCode)
     {
-        if(Random.value < 0.5f)
+        int randomLayer = Random.Range(0, 3);
+        for (int i = 0; i < 3; i++)
         {
-            catAnimator.SetLayerWeight(1, 1f);
-            catAnimator.SetLayerWeight(0, 0f);
-        }
-        else
-        {
-            catAnimator.SetLayerWeight(1, 0f);
-            catAnimator.SetLayerWeight(0, 1f);
+            catAnimator.SetLayerWeight(i, i == randomLayer ? 1f : 0f);
         }
         catAnimator.SetInteger("Result", resultCode);
         catAnimator.SetTrigger("SwitchMood");
@@ -167,6 +152,6 @@ public class AnimationManager : MonoBehaviour
 
     public void ShowBubble(int level)
     {
-        bubble.ShowBubbleAnimation(level);
+        _ = bubble.ShowBubbleAnimation(level);
     }
 }
