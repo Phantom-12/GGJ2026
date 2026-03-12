@@ -6,7 +6,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class Object : MonoBehaviour
+public class OperableObject : MonoBehaviour
 {
     private static readonly int Time1 = Shader.PropertyToID("_Time_");
     private static readonly int Speed = Shader.PropertyToID("_Speed");

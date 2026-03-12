@@ -5,7 +5,7 @@ using UnityEngine;
 public class Item : MonoBehaviour
 {
     [SerializeField]
-    private Object operableObject;
+    private OperableObject operableObject;
     public Vector3 startPosition;
     public float slideOutOffset = 10f;
     public SpriteRenderer spriteRenderer => GetComponent<SpriteRenderer>();

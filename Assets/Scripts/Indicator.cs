@@ -6,7 +6,7 @@ using DG.Tweening;
 
 public class Indicator : MonoBehaviour
 {
-    [SerializeField] private Object operableObject;
+    [SerializeField] private OperableObject operableObject;
     [SerializeField] private Sprite[] scoreSprites;
 
     private Image _image;
