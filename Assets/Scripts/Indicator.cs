@@ -26,10 +26,14 @@ public class Indicator : MonoBehaviour
         var (level, _) = operableObject.CalcScore();
         if (level != _state)
         {
-            int index = Mathf.Clamp(level - 1, 0, scoreSprites.Length - 1);
-            _image.sprite = scoreSprites[index];
             _state = level;
-            ChangeState(level).Forget();
+            int index = Mathf.Clamp(level - 1, 0, scoreSprites.Length - 1);
+            var sprite = scoreSprites[index];
+            if (sprite != _image.sprite)
+            {
+                _image.sprite = sprite;
+                PlayChangeStateAnim(level).Forget();
+            }
         }
     }
 
@@ -45,7 +49,7 @@ public class Indicator : MonoBehaviour
         transform.DOScale(Vector3.zero, 0.1f);
     }
 
-    private async UniTaskVoid ChangeState(int state)
+    private async UniTaskVoid PlayChangeStateAnim(int state)
     {
         await transform.DOScale(Vector3.one * 1.2f, 0.1f).SetEase(Ease.InOutBounce).AsyncWaitForCompletion();
         await transform.DOScale(Vector3.one, 0.05f).SetEase(Ease.InOutBounce).AsyncWaitForCompletion();

@@ -28,11 +28,13 @@ public class OperableObject : MonoBehaviour
     [SerializeField] private Transform putDownShower;
     [SerializeField] private ParticleSystem particleAppear;
     [SerializeField] private ParticleSystem particlePutDown;
+    [SerializeField] private ParticleSystem particlePutDownPerfect;
 
     [Header("配置")] [SerializeField] private Distance2Score scoreCfg;
     [SerializeField] private float moveDuration = 1;
     [SerializeField] private float radius = 2f;
     [SerializeField] private float putDownShowDuration = 2f;
+    [SerializeField] private float limitAngle = 60;
 
     private float _moveDurationDefault;
     private State _state = State.BeforeAppear;
@@ -72,7 +74,8 @@ public class OperableObject : MonoBehaviour
         {
             return;
         }
-        targetShower.SetParent(target,true);
+
+        targetShower.SetParent(target, true);
         targetShower.localScale = Vector3.one;
 
         _spriteRenderer.sprite = ItemManager.Instance.GetItemMembrane();
@@ -101,7 +104,24 @@ public class OperableObject : MonoBehaviour
 
         _state = State.PutDown;
         StopMove();
-        particlePutDown.Play();
+
+        // 粒子
+        particlePutDown.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        particlePutDownPerfect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+
+        switch (level)
+        {
+            case 1:
+            case 2:
+            case 3:
+                particlePutDown.Play();
+                break;
+            case 4:
+                particlePutDownPerfect.Play();
+                break;
+        }
+
+        // 音效
         switch (level)
         {
             case 1:
@@ -111,15 +131,13 @@ public class OperableObject : MonoBehaviour
                 AudioManager.Instance.PlaySfx(AudioType.NormalAlignmentSfx);
                 break;
             case 3:
-                AudioManager.Instance.PlaySfx(AudioType.PerfectAlignmentSfx);
-                break;
             case 4:
                 AudioManager.Instance.PlaySfx(AudioType.PerfectAlignmentSfx);
                 break;
         }
 
         await ShowPutDown();
-        targetShower.SetParent(ItemManager.Instance.GetCurrentItemObject().transform,true);
+        targetShower.SetParent(ItemManager.Instance.GetCurrentItemObject().transform, true);
         targetProxy.DOScale(Vector2.zero, 0.2f).SetEase(Ease.OutBack);
         _state = State.BeforeAppear;
         return (level, score);
@@ -142,7 +160,7 @@ public class OperableObject : MonoBehaviour
     {
         var dis = CalcDistance();
 
-        for(int i = scoreCfg.data.Count - 1; i >= 0; i--)
+        for (int i = scoreCfg.data.Count - 1; i >= 0; i--)
         {
             if (dis < scoreCfg.data[i].distance)
             {
@@ -203,7 +221,25 @@ public class OperableObject : MonoBehaviour
         }
 
         AnimationCurve curve = new AnimationCurve(keyframes);
-        Vector3[] points = { reference.position, RandomCirclePoint(reference.position, radius) };
+
+        // 计算随机位置，大于指定角度则重新选取
+        var randomPos = RandomCirclePoint(reference.position, radius);
+        for (var i = 0; i < 10000; i++)
+        {
+            var curPos = (Vector2)targetProxy.position;
+            var refPos = (Vector2)reference.position;
+            var refVec = refPos - curPos;
+            var tarVec = randomPos - refPos;
+            var angle = Vector2.Angle(refVec, tarVec);
+            if (angle < limitAngle)
+            {
+                break;
+            }
+
+            randomPos = RandomCirclePoint(reference.position, radius);
+        }
+
+        Vector3[] points = { reference.position, randomPos };
         await targetProxy.DOPath(points, moveDuration, PathType.CatmullRom).SetEase(curve).SetId("Move")
             .AsyncWaitForCompletion();
     }

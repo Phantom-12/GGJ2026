@@ -24,8 +24,7 @@ public class GameManager : MonoBehaviour
 
     float score = 0, multiple = 1f;
 
-    // Start is called before the first frame update
-    public void Start()
+    public void Awake()
     {
         if (Instance == null)
         {
@@ -35,7 +34,7 @@ public class GameManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
-            Instance.Start();
+            Instance.Awake();
         }
 
         AudioManager.Instance.PlayBGM(AudioType.StartPageMusic);
