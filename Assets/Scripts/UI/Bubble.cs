@@ -29,7 +29,8 @@ public class Bubble : MonoBehaviour
     public async UniTaskVoid ShowBubbleAnimation(int level)
     {
         _rect.anchoredPosition = _oriPos;
-        _image.sprite = sprites[level - 1];
+        int spriteIndex = Mathf.Clamp(level - 1, 0, sprites.Length - 1);
+        _image.sprite = sprites[spriteIndex];
         _rect.DOScale(Vector2.one, animDuration / 2).SetEase(Ease.InOutSine);
         await _rect.DOAnchorPosY(_rect.anchoredPosition.y + animDistance / 2, animDuration).SetEase(Ease.InOutSine)
             .AsyncWaitForCompletion();

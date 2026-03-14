@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     public int totalTime = 600;
     public Text timeText, scoreText, multipleText, comboText;
     public Slider comboSlider;
-    public int comboTimeWindow = 5;
+    public int difficultyLevel = 1;
     [SerializeField] private OperableObject operableObject;
     [SerializeField] private Combo2Multiple combo2Multiple;
     [SerializeField] private Score2Rating score2Rating;
@@ -40,6 +40,31 @@ public class GameManager : MonoBehaviour
         AudioManager.Instance.PlayBGM(AudioType.StartPageMusic);
     }
 
+    public void SetDifficultyLevel(int level)
+    {
+        difficultyLevel = level;
+        LoadDifficultyCfg();
+    }
+
+    public void LoadDifficultyCfg()
+    {
+        switch (difficultyLevel)
+        {
+            case 1:
+                combo2Multiple = Resources.Load<Combo2Multiple>("Cfgs/Easy/Combo2Multiple");
+                score2Rating = Resources.Load<Score2Rating>("Cfgs/Easy/Score2Rating");
+                break;
+            case 2:
+                combo2Multiple = Resources.Load<Combo2Multiple>("Cfgs/Normal/Combo2Multiple_Normal");
+                score2Rating = Resources.Load<Score2Rating>("Cfgs/Normal/Score2Rating");
+                break;
+            case 3:
+                combo2Multiple = Resources.Load<Combo2Multiple>("Cfgs/Hard/Combo2Multiple");
+                score2Rating = Resources.Load<Score2Rating>("Cfgs/Hard/Score2Rating");
+                break;
+        }
+    }
+
     public int GetScore()
     {
         return (int)score;
@@ -57,6 +82,8 @@ public class GameManager : MonoBehaviour
         multipleText.text = "x1.0";
         comboText.text = "Combo 0";
 
+        operableObject.ResetMoveDuration();
+
         HideComboUI();
         if (_comboTimerCoroutine != null)
         {
@@ -67,6 +94,7 @@ public class GameManager : MonoBehaviour
         StopAllCoroutines();
         StartCoroutine(Timer());
         StartCoroutine(PlayerPutDownListener());
+
         queue.Init();
         AnimationManager.Instance.SetCatIdle();
         AudioManager.Instance.PlayBGM(AudioType.LevelMusic);
@@ -289,10 +317,10 @@ public class GameManager : MonoBehaviour
     {
         comboSlider.value = 1f;
         float elapsed = 0f;
-        while (elapsed < comboTimeWindow)
+        while (elapsed < combo2Multiple.comboTimeWindow)
         {
             elapsed += Time.deltaTime;
-            comboSlider.value = 1f - elapsed / comboTimeWindow;
+            comboSlider.value = 1f - elapsed / combo2Multiple.comboTimeWindow;
             yield return null;
         }
 

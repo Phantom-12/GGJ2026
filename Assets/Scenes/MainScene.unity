@@ -1068,6 +1068,7 @@ MonoBehaviour:
   comboText: {fileID: 1570747575}
   comboSlider: {fileID: 92393201}
   comboTimeWindow: 5
+  difficultyLevel: 1
   operableObject: {fileID: 1626638227}
   combo2Multiple: {fileID: 11400000, guid: f4c2c1f8e5197417bbdb15bfdeadcb50, type: 2}
   score2Rating: {fileID: 11400000, guid: 246dd081525bf47f39234d8700a5b6d9, type: 2}
@@ -3024,8 +3025,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -830, y: 0}
-  m_SizeDelta: {x: 560, y: 140}
+  m_AnchoredPosition: {x: 370, y: 0}
+  m_SizeDelta: {x: 260, y: 140}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &1201117250
 CanvasGroup:
@@ -3066,7 +3067,7 @@ MonoBehaviour:
     m_BestFit: 1
     m_MinSize: 10
     m_MaxSize: 180
-    m_Alignment: 5
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -5841,7 +5842,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Score: 0'
+  m_Text: 'Score: 9999'
 --- !u!222 &1946745237
 CanvasRenderer:
   m_ObjectHideFlags: 0

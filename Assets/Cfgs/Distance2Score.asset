@@ -13,9 +13,11 @@ MonoBehaviour:
   m_Name: Distance2Score
   m_EditorClassIdentifier: 
   data:
-  - distance: 0.1
-    score: 5
-  - distance: 0.4
-    score: 3
   - distance: 10000
     score: 1
+  - distance: 0.4
+    score: 3
+  - distance: 0.1
+    score: 5
+  - distance: 0.05
+    score: 10

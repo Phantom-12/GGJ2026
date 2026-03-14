@@ -113,6 +113,9 @@ public class OperableObject : MonoBehaviour
             case 3:
                 AudioManager.Instance.PlaySfx(AudioType.PerfectAlignmentSfx);
                 break;
+            case 4:
+                AudioManager.Instance.PlaySfx(AudioType.PerfectAlignmentSfx);
+                break;
         }
 
         await ShowPutDown();
@@ -138,15 +141,15 @@ public class OperableObject : MonoBehaviour
     public (int, int) CalcScore()
     {
         var dis = CalcDistance();
-        for (int i = 0; i < scoreCfg.data.Count; i++)
+        for (int i = 1; i <= scoreCfg.data.Count; i++)
         {
-            if (dis < scoreCfg.data[i].distance)
+            if (dis >= scoreCfg.data[i-1].distance)
             {
-                return (3 - i, scoreCfg.data[i].score);
+                return (i, scoreCfg.data[i - 1].score);
             }
         }
 
-        return (0, 0);
+        return (scoreCfg.data.Count, 0);
     }
 
     private Vector2 RandomCirclePoint(Vector2 center, float radius)

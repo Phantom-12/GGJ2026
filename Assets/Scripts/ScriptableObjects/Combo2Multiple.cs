@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -8,6 +9,8 @@ using UnityEngine.Serialization;
 public class Combo2Multiple : ScriptableObject
 {
     [Header("允许连击的最低评分等级")] public int comboLevel = 3; 
+    [Header("允许连击的时间窗口(单位秒)")] public float comboTimeWindow = 5;
+
     [Serializable]
     public struct C2MData
     {

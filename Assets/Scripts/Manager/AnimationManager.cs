@@ -66,7 +66,7 @@ public class AnimationManager : MonoBehaviour
     IEnumerator ScoreAdditionRoutine(int addition)
     {
         RectTransform scoreAdditionRect = scoreAddition.GetComponent<RectTransform>();
-        scoreAdditionRect.anchoredPosition = new Vector3(-830, 0, 0);
+        scoreAdditionRect.anchoredPosition = new Vector3(370, 0, 0);
         CanvasGroup canvasGroup = scoreAddition.GetComponent<CanvasGroup>();
         canvasGroup.alpha = 1f;
         yield return new WaitForSeconds(0.5f);
@@ -131,6 +131,9 @@ public class AnimationManager : MonoBehaviour
                 AudioManager.Instance.PlaySfx(AudioType.CatNormalSfx);
                 break;
             case 3:
+                AudioManager.Instance.PlaySfx(AudioType.CatPerfectSfx);
+                break;
+            case 4:
                 AudioManager.Instance.PlaySfx(AudioType.CatPerfectSfx);
                 break;
         }
