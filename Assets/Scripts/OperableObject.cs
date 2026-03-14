@@ -141,15 +141,16 @@ public class OperableObject : MonoBehaviour
     public (int, int) CalcScore()
     {
         var dis = CalcDistance();
-        for (int i = 1; i <= scoreCfg.data.Count; i++)
+
+        for(int i = scoreCfg.data.Count - 1; i >= 0; i--)
         {
-            if (dis >= scoreCfg.data[i-1].distance)
+            if (dis < scoreCfg.data[i].distance)
             {
-                return (i, scoreCfg.data[i - 1].score);
+                return (i + 1, scoreCfg.data[i].score);
             }
         }
 
-        return (scoreCfg.data.Count, 0);
+        return (1, scoreCfg.data[0].score);
     }
 
     private Vector2 RandomCirclePoint(Vector2 center, float radius)

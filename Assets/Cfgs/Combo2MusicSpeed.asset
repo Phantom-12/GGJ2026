@@ -12,4 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65a71920dbf3d48a1add5a31ab9e65f6, type: 3}
   m_Name: Combo2MusicSpeed
   m_EditorClassIdentifier: 
-  data: []
+  data:
+  - bgmSpeedMultiple: 1.05
+  - bgmSpeedMultiple: 1.1
+  - bgmSpeedMultiple: 1.15
+  - bgmSpeedMultiple: 1.2
+  - bgmSpeedMultiple: 1.25

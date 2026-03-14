@@ -1067,10 +1067,10 @@ MonoBehaviour:
   multipleText: {fileID: 2047260011}
   comboText: {fileID: 1570747575}
   comboSlider: {fileID: 92393201}
-  comboTimeWindow: 5
   difficultyLevel: 1
   operableObject: {fileID: 1626638227}
   combo2Multiple: {fileID: 11400000, guid: f4c2c1f8e5197417bbdb15bfdeadcb50, type: 2}
+  combo2MusicSpeed: {fileID: 11400000, guid: 5d7d9fee829e849998506ac6f40500a2, type: 2}
   score2Rating: {fileID: 11400000, guid: 246dd081525bf47f39234d8700a5b6d9, type: 2}
   canPutDown: 1
 --- !u!4 &360516120
