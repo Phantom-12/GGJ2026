@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     public int difficultyLevel = 1;
     [SerializeField] private OperableObject operableObject;
     [SerializeField] private Combo2Multiple combo2Multiple;
+    [SerializeField] private Combo2MusicSpeed combo2MusicSpeed;
     [SerializeField] private Score2Rating score2Rating;
     public bool canPutDown = true;
     int time = 0, comboCount = 0;
@@ -302,7 +303,9 @@ public class GameManager : MonoBehaviour
         comboText.text = $"Combo {comboCount}";
         comboText.color = data.color;
         comboSlider.fillRect.GetComponent<Image>().color = data.color;
-        AudioManager.Instance.SetBGMSpeed(data.bgmSpeedMultiple, 0.2f);
+
+        var audioData = combo2MusicSpeed.data[Mathf.Clamp(GetComboDataIndex(), 0, combo2MusicSpeed.data.Count - 1)];
+        AudioManager.Instance.SetBGMSpeed(audioData.bgmSpeedMultiple, 0.2f);
     }
 
     private void ChangeObjectSpeed()

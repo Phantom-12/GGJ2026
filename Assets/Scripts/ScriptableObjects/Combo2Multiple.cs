@@ -18,8 +18,6 @@ public class Combo2Multiple : ScriptableObject
         public int comboTime;
         public float moveDuration;
         public float scoreMultiple;
-        [Min(0.01f)]
-        public float bgmSpeedMultiple;
     }
     public List<C2MData> data;
 }
