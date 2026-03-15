@@ -1,8 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using System.Collections.Generic;
+using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
@@ -32,15 +33,26 @@ public class AudioManager : MonoBehaviour
     public AudioLib audioLibrary;
     public static AudioManager Instance { get; private set; }
 
+    [Header("Mixer")]
+    [SerializeField] private AudioMixer audioMixer;
+    [SerializeField] private AudioMixerGroup bgmMixerGroup;
+    [SerializeField] private AudioMixerGroup sfxMixerGroup;
+    [SerializeField] private string masterVolumeParameter = "MasterVolume";
+    [SerializeField] private string bgmVolumeParameter = "BGMVolume";
+    [SerializeField] private string sfxVolumeParameter = "SFXVolume";
+
     [Header("Audio Sources")] private AudioSource _bgmSource;
     private readonly List<AudioSource> _sfxSources = new();
     private readonly Dictionary<AudioSource, int> _sfxPlayIds = new();
     private int _nextSfxPlayId = 1;
     private CancellationTokenSource _bgmSpeedCts;
 
-    [Header("Volume")] [Range(0, 1)] public float bgmVolume = 1f;
+    [Header("Volume")] [Range(0, 1)] public float masterVolume = 1f;
+    [Range(0, 1)] public float bgmVolume = 1f;
     [Range(0, 1)] public float sfxVolume = 1f;
-    [Header("Playback")] public float bgmSpeed = 1f;
+
+    [Header("Playback")] [Min(0.01f)] public float bgmSpeed = 1f;
+    [Min(0.01f)] public float sfxSpeed = 1f;
 
     [Header("SFX Pool")] public int sfxPoolSize = 8;
 
@@ -57,27 +69,25 @@ public class AudioManager : MonoBehaviour
 
         InitAudioSources();
         audioLibrary.Init();
+        ApplyAudioSettings();
     }
 
     void InitAudioSources()
     {
-        // BGM
         _bgmSource = gameObject.AddComponent<AudioSource>();
         _bgmSource.loop = true;
         _bgmSource.playOnAwake = false;
-        _bgmSource.pitch = bgmSpeed;
+        _bgmSource.outputAudioMixerGroup = bgmMixerGroup;
 
-        // SFX Pool
         for (int i = 0; i < sfxPoolSize; i++)
         {
             AudioSource sfx = gameObject.AddComponent<AudioSource>();
             sfx.playOnAwake = false;
+            sfx.outputAudioMixerGroup = sfxMixerGroup;
             _sfxSources.Add(sfx);
             _sfxPlayIds[sfx] = 0;
         }
     }
-
-    // ================= BGM =================
 
     public void PlayBGM(AudioType clipType, bool loop = true)
     {
@@ -87,7 +97,7 @@ public class AudioManager : MonoBehaviour
 
         _bgmSource.clip = clip;
         _bgmSource.loop = loop;
-        _bgmSource.volume = bgmVolume;
+        _bgmSource.volume = GetSourceVolume(bgmVolumeParameter, bgmVolume);
         _bgmSource.pitch = bgmSpeed;
         _bgmSource.Play();
     }
@@ -98,24 +108,19 @@ public class AudioManager : MonoBehaviour
         _bgmSource.Stop();
     }
 
-    // ================= SFX =================
-
     public SfxHandle PlaySfx(AudioType clipType)
     {
         var clip = audioLibrary.GetAudio(clipType);
         if (!clip)
-        {
             return default;
-        }
 
         AudioSource source = GetAvailableSfxSource();
         if (!source)
-        {
             return default;
-        }
 
         source.clip = clip;
-        source.volume = sfxVolume;
+        source.volume = GetSourceVolume(sfxVolumeParameter, sfxVolume);
+        source.pitch = sfxSpeed;
         source.Play();
 
         int playId = _nextSfxPlayId++;
@@ -126,14 +131,10 @@ public class AudioManager : MonoBehaviour
     public void StopSfx(SfxHandle handle)
     {
         if (!handle.IsValid)
-        {
             return;
-        }
 
         if (!_sfxPlayIds.TryGetValue(handle.Source, out int currentPlayId) || currentPlayId != handle.PlayId)
-        {
             return;
-        }
 
         handle.Source.Stop();
         handle.Source.clip = null;
@@ -161,17 +162,31 @@ public class AudioManager : MonoBehaviour
         return null;
     }
 
-    // ================= Volume =================
+    public void SetMasterVolume(float volume)
+    {
+        masterVolume = Mathf.Clamp01(volume);
+
+        if (!TrySetMixerVolume(masterVolumeParameter, masterVolume))
+            AudioListener.volume = masterVolume;
+    }
 
     public void SetBGMVolume(float volume)
     {
-        bgmVolume = volume;
-        _bgmSource.volume = bgmVolume;
+        bgmVolume = Mathf.Clamp01(volume);
+
+        if (_bgmSource)
+            _bgmSource.volume = GetSourceVolume(bgmVolumeParameter, bgmVolume);
     }
 
     public void SetSfxVolume(float volume)
     {
-        sfxVolume = volume;
+        sfxVolume = Mathf.Clamp01(volume);
+
+        if (UsesMixerVolume(sfxVolumeParameter))
+            return;
+
+        foreach (var sfx in _sfxSources)
+            sfx.volume = sfxVolume;
     }
 
     public void SetBGMSpeed(float speed, float duration = 0f)
@@ -190,11 +205,29 @@ public class AudioManager : MonoBehaviour
         TweenBGMSpeedAsync(startSpeed, targetSpeed, duration, _bgmSpeedCts.Token).Forget();
     }
 
+    public void SetSFXSpeed(float speed)
+    {
+        ApplySFXSpeed(Mathf.Max(0.01f, speed));
+    }
+
+    public void SetSfxSpeed(float speed)
+    {
+        SetSFXSpeed(speed);
+    }
+
     private void ApplyBGMSpeed(float speed)
     {
         bgmSpeed = speed;
         if (_bgmSource)
             _bgmSource.pitch = speed;
+    }
+
+    private void ApplySFXSpeed(float speed)
+    {
+        sfxSpeed = speed;
+
+        foreach (var sfx in _sfxSources)
+            sfx.pitch = speed;
     }
 
     private void CancelBGMSpeedTransition()
@@ -224,10 +257,51 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    // 特写
     public void PlayButtonClickSfx()
     {
         PlaySfx(AudioType.ButtonClickSfx);
+    }
+
+    private void ApplyAudioSettings()
+    {
+        SetMasterVolume(masterVolume);
+        SetBGMVolume(bgmVolume);
+        SetSfxVolume(sfxVolume);
+        ApplyBGMSpeed(Mathf.Max(0.01f, bgmSpeed));
+        ApplySFXSpeed(Mathf.Max(0.01f, sfxSpeed));
+    }
+
+    private float GetSourceVolume(string parameterName, float fallbackVolume)
+    {
+        return UsesMixerVolume(parameterName) ? 1f : Mathf.Clamp01(fallbackVolume);
+    }
+
+    private bool UsesMixerVolume(string parameterName)
+    {
+        return TrySetMixerVolume(parameterName, GetVolumeValue(parameterName));
+    }
+
+    private float GetVolumeValue(string parameterName)
+    {
+        if (parameterName == masterVolumeParameter)
+            return masterVolume;
+
+        if (parameterName == bgmVolumeParameter)
+            return bgmVolume;
+
+        if (parameterName == sfxVolumeParameter)
+            return sfxVolume;
+
+        return 1f;
+    }
+
+    private bool TrySetMixerVolume(string parameterName, float linearVolume)
+    {
+        if (!audioMixer || string.IsNullOrWhiteSpace(parameterName))
+            return false;
+
+        float dbVolume = linearVolume <= 0.0001f ? -80f : Mathf.Log10(Mathf.Clamp(linearVolume, 0.0001f, 1f)) * 20f;
+        return audioMixer.SetFloat(parameterName, dbVolume);
     }
 
     private void OnDestroy()

@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour
                 score2Rating = Resources.Load<Score2Rating>("Cfgs/Easy/Score2Rating");
                 break;
             case 2:
-                combo2Multiple = Resources.Load<Combo2Multiple>("Cfgs/Normal/Combo2Multiple_Normal");
+                combo2Multiple = Resources.Load<Combo2Multiple>("Cfgs/Normal/Combo2Multiple");
                 score2Rating = Resources.Load<Score2Rating>("Cfgs/Normal/Score2Rating");
                 break;
             case 3:
@@ -220,7 +220,7 @@ public class GameManager : MonoBehaviour
             yield return null;
             if (canPutDown && (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.F) ||
                                Input.GetKeyDown(KeyCode.V) || Input.GetKeyDown(KeyCode.J) ||
-                               Input.GetKeyDown(KeyCode.N)))
+                               Input.GetKeyDown(KeyCode.N) || Input.GetMouseButtonDown(0)))
             {
                 PutMaskDown();
             }
