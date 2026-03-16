@@ -10,7 +10,7 @@ public class AnimationManager : MonoBehaviour
     public static AnimationManager Instance;
     [SerializeField] private Indicator indicator;
     [SerializeField] private Bubble bubble;
-    [SerializeField] Score2Rating score2Rating;
+    public Score2Rating score2Rating => GameManager.Instance.score2Rating;
     public Animator startCanvasAnimator, infoCanvasAnimator, endCanvasAnimator, catAnimator;
 
     public Image endBackgroundImage;

@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b1d8d2e8ce704a13ba3cad136c23bf7, type: 3}
+  m_Name: Score2Rating
+  m_EditorClassIdentifier: 
+  data:
+  - score: 0
+    ratingSprite: {fileID: -854347309, guid: ebdf028b3c3e8435f962eadeeac87a08, type: 3}
+    commentSprite: {fileID: 1538335428, guid: 9ef74e4a6c08247f1b2ced38911558b4, type: 3}
+    endBgSprite: {fileID: 21300000, guid: ee21b523539be43449a6c1d9ba061a49, type: 3}
+  - score: 30
+    ratingSprite: {fileID: 1726573302, guid: ebdf028b3c3e8435f962eadeeac87a08, type: 3}
+    commentSprite: {fileID: 757166218, guid: 9ef74e4a6c08247f1b2ced38911558b4, type: 3}
+    endBgSprite: {fileID: 21300000, guid: ee21b523539be43449a6c1d9ba061a49, type: 3}
+  - score: 50
+    ratingSprite: {fileID: 926651538, guid: ebdf028b3c3e8435f962eadeeac87a08, type: 3}
+    commentSprite: {fileID: -1903843404, guid: 9ef74e4a6c08247f1b2ced38911558b4, type: 3}
+    endBgSprite: {fileID: 21300000, guid: 2176316dd4a16491ea8de73eba9712fc, type: 3}
+  - score: 80
+    ratingSprite: {fileID: -1494057622, guid: ebdf028b3c3e8435f962eadeeac87a08, type: 3}
+    commentSprite: {fileID: -550521780, guid: 9ef74e4a6c08247f1b2ced38911558b4, type: 3}
+    endBgSprite: {fileID: 21300000, guid: 2176316dd4a16491ea8de73eba9712fc, type: 3}
+  - score: 120
+    ratingSprite: {fileID: 1970319683, guid: ebdf028b3c3e8435f962eadeeac87a08, type: 3}
+    commentSprite: {fileID: -1437435775, guid: 9ef74e4a6c08247f1b2ced38911558b4, type: 3}
+    endBgSprite: {fileID: 21300000, guid: 2176316dd4a16491ea8de73eba9712fc, type: 3}
+  - score: 180
+    ratingSprite: {fileID: 121690168, guid: ebdf028b3c3e8435f962eadeeac87a08, type: 3}
+    commentSprite: {fileID: 1177302175, guid: 9ef74e4a6c08247f1b2ced38911558b4, type: 3}
+    endBgSprite: {fileID: 21300000, guid: aca117106d7c2425ab80fabbab8d0e30, type: 3}
