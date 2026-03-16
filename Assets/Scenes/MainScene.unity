@@ -1266,7 +1266,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   queue: {fileID: 1812016478}
-  totalTime: 30
+  totalTime: 90
   timeText: {fileID: 1757000823}
   scoreText: {fileID: 1946745236}
   multipleText: {fileID: 2047260011}
@@ -1348,7 +1348,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   indicator: {fileID: 958202168}
   bubble: {fileID: 311671967}
-  score2Rating: {fileID: 11400000, guid: 246dd081525bf47f39234d8700a5b6d9, type: 2}
   startCanvasAnimator: {fileID: 1794071925}
   infoCanvasAnimator: {fileID: 1432227627}
   endCanvasAnimator: {fileID: 153815860}

@@ -131,8 +131,10 @@ public class OperableObject : MonoBehaviour
                 AudioManager.Instance.PlaySfx(AudioType.NormalAlignmentSfx);
                 break;
             case 3:
-            case 4:
                 AudioManager.Instance.PlaySfx(AudioType.PerfectAlignmentSfx);
+                break;
+            case 4:
+                AudioManager.Instance.PlaySfx(AudioType.BestAlignmentSfx);
                 break;
         }
 

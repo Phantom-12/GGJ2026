@@ -51,18 +51,16 @@ public class GameManager : MonoBehaviour
         switch (difficultyLevel)
         {
             case 1:
-                combo2Multiple = Resources.Load<Combo2Multiple>("Difficulty/Easy/Combo2Multiple");
-                score2Rating = Resources.Load<Score2Rating>("Difficulty/Easy/Score2Rating");
+                combo2Multiple = Resources.Load<Combo2Multiple>("Cfgs/Easy/Combo2Multiple");
+                score2Rating = Resources.Load<Score2Rating>("Cfgs/Easy/Score2Rating");
                 break;
             case 2:
                 combo2Multiple = Resources.Load<Combo2Multiple>("Cfgs/Normal/Combo2Multiple");
                 score2Rating = Resources.Load<Score2Rating>("Cfgs/Normal/Score2Rating");
-                combo2Multiple = Resources.Load<Combo2Multiple>("Difficulty/Normal/Combo2Multiple");
-                score2Rating = Resources.Load<Score2Rating>("Difficulty/Normal/Score2Rating");
                 break;
             case 3:
-                combo2Multiple = Resources.Load<Combo2Multiple>("Difficulty/Hard/Combo2Multiple");
-                score2Rating = Resources.Load<Score2Rating>("Difficulty/Hard/Score2Rating");
+                combo2Multiple = Resources.Load<Combo2Multiple>("Cfgs/Hard/Combo2Multiple");
+                score2Rating = Resources.Load<Score2Rating>("Cfgs/Hard/Score2Rating");
                 break;
         }
     }

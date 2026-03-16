@@ -7,6 +7,7 @@ public enum AudioType
     LevelMusic,
     StartPageMusic,
     ItemEnterSfx,
+    BestAlignmentSfx,
     PerfectAlignmentSfx,
     NormalAlignmentSfx,
     FailAlignmentSfx,
