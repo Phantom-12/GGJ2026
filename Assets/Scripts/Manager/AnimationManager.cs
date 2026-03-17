@@ -10,7 +10,7 @@ public class AnimationManager : MonoBehaviour
     public static AnimationManager Instance;
     [SerializeField] private Indicator indicator;
     [SerializeField] private Bubble bubble;
-    public Score2Rating score2Rating => GameManager.Instance.score2Rating;
+    public RatingSprites ratingSprites;
     public Animator startCanvasAnimator, infoCanvasAnimator, endCanvasAnimator, catAnimator;
 
     public Image endBackgroundImage;
@@ -19,7 +19,6 @@ public class AnimationManager : MonoBehaviour
     public Vector3 originalPosition;
     public float itemAnimationDuration = 0.4f;
     private GameObject item;
-    private Sprite ratingSprite;
 
     public void Start()
     {
@@ -92,9 +91,9 @@ public class AnimationManager : MonoBehaviour
     public void GameOverAnimation()
     {
         int ratingIndex = GameManager.Instance.GetRatingIndex();
-        ratingImage.sprite = score2Rating.data[ratingIndex].ratingSprite;
-        commentImage.sprite = score2Rating.data[ratingIndex].commentSprite;
-        endBackgroundImage.sprite = score2Rating.data[ratingIndex].endBgSprite;
+        ratingImage.sprite = ratingSprites.data[ratingIndex].sprite;
+        commentImage.sprite = ratingSprites.data[ratingIndex].commentSprite;
+        endBackgroundImage.sprite = ratingSprites.data[ratingIndex].endBgSprite;
         indicator.Hide();
         endCanvasAnimator.SetTrigger("Show");
         infoCanvasAnimator.SetTrigger("Hide");

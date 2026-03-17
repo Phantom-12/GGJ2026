@@ -31,12 +31,11 @@ public class OperableObject : MonoBehaviour
     [SerializeField] private ParticleSystem particlePutDownPerfect;
 
     [Header("配置")] [SerializeField] private Distance2Score scoreCfg;
-    [SerializeField] private float moveDuration = 1;
     [SerializeField] private float radius = 2f;
     [SerializeField] private float putDownShowDuration = 2f;
     [SerializeField] private float limitAngle = 60;
 
-    private float _moveDurationDefault;
+    private float _moveDurationDefault, moveDuration = 1;
     private State _state = State.BeforeAppear;
     private Tween _moveTween;
     private SpriteRenderer _spriteRenderer;
@@ -55,6 +54,11 @@ public class OperableObject : MonoBehaviour
 
     private void Update()
     {
+    }
+
+    public void SetDefaultMoveDuration(float duration)
+    {
+        _moveDurationDefault = duration;
     }
 
     public void SetMoveDuration(float duration)

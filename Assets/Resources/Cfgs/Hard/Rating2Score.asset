@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b1d8d2e8ce704a13ba3cad136c23bf7, type: 3}
+  m_Name: Rating2Score
+  m_EditorClassIdentifier: 
+  data:
+  - ratingLevel: 0
+    score: 0
+  - ratingLevel: 1
+    score: 30
+  - ratingLevel: 2
+    score: 50
+  - ratingLevel: 3
+    score: 80
+  - ratingLevel: 4
+    score: 120
+  - ratingLevel: 5
+    score: 180

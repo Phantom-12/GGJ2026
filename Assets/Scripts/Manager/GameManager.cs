@@ -14,9 +14,10 @@ public class GameManager : MonoBehaviour
     public Slider comboSlider;
     public int difficultyLevel = 1;
     [SerializeField] private OperableObject operableObject;
-    [SerializeField] private Combo2Multiple combo2Multiple;
     [SerializeField] private Combo2MusicSpeed combo2MusicSpeed;
-    [SerializeField] public Score2Rating score2Rating;
+    private Combo2Multiple combo2Multiple;
+    private Rating2Score rating2Score;
+    private OriginalData originalData;
     public bool canPutDown = true;
     int time = 0, comboCount = 0;
     private System.Threading.CancellationTokenSource _putDownCts;
@@ -52,17 +53,22 @@ public class GameManager : MonoBehaviour
         {
             case 1:
                 combo2Multiple = Resources.Load<Combo2Multiple>("Cfgs/Easy/Combo2Multiple");
-                score2Rating = Resources.Load<Score2Rating>("Cfgs/Easy/Score2Rating");
+                rating2Score = Resources.Load<Rating2Score>("Cfgs/Easy/Rating2Score");
+                originalData = Resources.Load<OriginalData>("Cfgs/Easy/OriginalParams");
                 break;
             case 2:
                 combo2Multiple = Resources.Load<Combo2Multiple>("Cfgs/Normal/Combo2Multiple");
-                score2Rating = Resources.Load<Score2Rating>("Cfgs/Normal/Score2Rating");
+                rating2Score = Resources.Load<Rating2Score>("Cfgs/Normal/Rating2Score");
+                originalData = Resources.Load<OriginalData>("Cfgs/Normal/OriginalParams");
                 break;
             case 3:
                 combo2Multiple = Resources.Load<Combo2Multiple>("Cfgs/Hard/Combo2Multiple");
-                score2Rating = Resources.Load<Score2Rating>("Cfgs/Hard/Score2Rating");
+                rating2Score = Resources.Load<Rating2Score>("Cfgs/Hard/Rating2Score");
+                originalData = Resources.Load<OriginalData>("Cfgs/Hard/OriginalParams");
                 break;
         }
+        totalTime = originalData.totalTime;
+        operableObject.SetDefaultMoveDuration(originalData.startMoveDuration);
     }
 
     public int GetScore()
@@ -198,11 +204,11 @@ public class GameManager : MonoBehaviour
     public int GetRatingIndex()
     {
         int rating = 0;
-        foreach (var data in score2Rating.data)
+        foreach (var data in rating2Score.data)
         {
             if (score >= data.score)
             {
-                rating = score2Rating.data.IndexOf(data);
+                rating = rating2Score.data.IndexOf(data);
             }
             else
             {
