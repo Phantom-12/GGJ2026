@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -226,11 +227,40 @@ public class GameManager : MonoBehaviour
             yield return null;
             if (canPutDown && (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.F) ||
                                Input.GetKeyDown(KeyCode.V) || Input.GetKeyDown(KeyCode.J) ||
-                               Input.GetKeyDown(KeyCode.N) || Input.GetMouseButtonDown(0)))
+                               Input.GetKeyDown(KeyCode.N) || IsNonUiPointerDown()))
             {
                 PutMaskDown();
             }
         }
+    }
+
+    private bool IsNonUiPointerDown()
+    {
+        if (Input.touchCount > 0)
+        {
+            for (int i = 0; i < Input.touchCount; i++)
+            {
+                Touch touch = Input.GetTouch(i);
+                if (touch.phase == TouchPhase.Began && !IsPointerOverUi(touch.fingerId))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return Input.GetMouseButtonDown(0) && !IsPointerOverUi();
+    }
+
+    private bool IsPointerOverUi(int pointerId = -1)
+    {
+        if (EventSystem.current == null)
+        {
+            return false;
+        }
+
+        return pointerId >= 0
+            ? EventSystem.current.IsPointerOverGameObject(pointerId)
+            : EventSystem.current.IsPointerOverGameObject();
     }
 
     /* TODO: 将膜放下，并计分的函数 */

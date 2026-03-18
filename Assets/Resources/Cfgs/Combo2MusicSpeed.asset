@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Combo2MusicSpeed
   m_EditorClassIdentifier: 
   data:
-  - bgmSpeedMultiple: 1.05
+  - bgmSpeedMultiple: 1.02
+  - bgmSpeedMultiple: 1.04
+  - bgmSpeedMultiple: 1.06
+  - bgmSpeedMultiple: 1.08
   - bgmSpeedMultiple: 1.1
-  - bgmSpeedMultiple: 1.15
-  - bgmSpeedMultiple: 1.2
-  - bgmSpeedMultiple: 1.25

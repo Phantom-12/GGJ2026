@@ -16,12 +16,12 @@ MonoBehaviour:
   - ratingLevel: 0
     score: 0
   - ratingLevel: 1
-    score: 30
+    score: 1000
   - ratingLevel: 2
-    score: 50
+    score: 1500
   - ratingLevel: 3
-    score: 80
+    score: 1800
   - ratingLevel: 4
-    score: 120
+    score: 2000
   - ratingLevel: 5
-    score: 180
+    score: 2100
