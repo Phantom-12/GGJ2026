@@ -40,7 +40,7 @@ public class CustomerQueue : MonoBehaviour
     public void ClearQueue()
     {
         StopAllCoroutines();
-        foreach (GameObject customer in customerQueue)
+        foreach (GameObject customer in customerPool)
         {
             customer.SetActive(false);
         }
