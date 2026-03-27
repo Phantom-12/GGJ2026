@@ -36,7 +36,7 @@ public class OperableObject : MonoBehaviour
     [SerializeField] private float putDownShowDuration = 2f;
     [SerializeField] private float limitAngle = 60;
 
-    private float _moveDurationDefault, moveDuration = 1;
+    private float _moveSpeedDefault, moveSpeed = 1;
     private State _state = State.BeforeAppear;
     private Tween _moveTween;
     private SpriteRenderer _spriteRenderer;
@@ -46,7 +46,7 @@ public class OperableObject : MonoBehaviour
     {
         _spriteRenderer = targetShower.GetComponent<SpriteRenderer>();
         _putDownShowSpriteRenderer = putDownShower.GetComponent<SpriteRenderer>();
-        _moveDurationDefault = moveDuration;
+        _moveSpeedDefault = moveSpeed;
         targetProxy.localScale = new Vector2(0, 0);
         putDownShower.gameObject.SetActive(false);
         gameObject.SetActive(false);
@@ -57,19 +57,19 @@ public class OperableObject : MonoBehaviour
     {
     }
 
-    public void SetDefaultMoveDuration(float duration)
+    public void SetDefaultMoveSpeed(float speed)
     {
-        _moveDurationDefault = duration;
+        _moveSpeedDefault = speed;
     }
 
-    public void SetMoveDuration(float duration)
+    public void SetMoveSpeed(float speed)
     {
-        moveDuration = duration;
+        moveSpeed = speed;
     }
 
-    public void ResetMoveDuration()
+    public void ResetMoveSpeed()
     {
-        moveDuration = _moveDurationDefault;
+        moveSpeed = _moveSpeedDefault;
     }
 
     // 出现效果

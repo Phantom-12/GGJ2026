@@ -16,7 +16,7 @@ public class Combo2Multiple : ScriptableObject
     {
         public Color color;
         public int comboTime;
-        public float moveDuration;
+        public float moveSpeed;
         public float scoreMultiple;
     }
     public List<C2MData> data;

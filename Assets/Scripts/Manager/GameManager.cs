@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour
                 break;
         }
         totalTime = originalData.totalTime;
-        operableObject.SetDefaultMoveDuration(originalData.startMoveDuration);
+        operableObject.SetDefaultMoveSpeed(originalData.startMoveDuration);
     }
 
     public int GetScore()
@@ -89,7 +89,7 @@ public class GameManager : MonoBehaviour
         multipleText.text = "x1.0";
         comboText.text = "Combo 0";
 
-        operableObject.ResetMoveDuration();
+        operableObject.ResetMoveSpeed();
 
         HideComboUI();
         if (_comboTimerCoroutine != null)
@@ -299,7 +299,7 @@ public class GameManager : MonoBehaviour
             comboCount = 0;
             multiple = 1f;
             HideComboUI();
-            operableObject.ResetMoveDuration();
+            operableObject.ResetMoveSpeed();
             AudioManager.Instance.SetBGMSpeed(1f, 0.2f);
             if (_comboTimerCoroutine != null)
                 StopCoroutine(_comboTimerCoroutine);
@@ -348,7 +348,7 @@ public class GameManager : MonoBehaviour
         if (combo2Multiple == null || combo2Multiple.data.Count == 0) return;
         int index = Mathf.Clamp(GetComboDataIndex(), 0, combo2Multiple.data.Count - 1);
         var data = combo2Multiple.data[index];
-        operableObject.SetMoveDuration(data.moveDuration);
+        operableObject.SetMoveSpeed(data.moveSpeed);
     }
 
     IEnumerator ComboTimer()
@@ -366,7 +366,7 @@ public class GameManager : MonoBehaviour
         multiple = 1f;
         _comboTimerCoroutine = null;
         HideComboUI();
-        operableObject.ResetMoveDuration();
+        operableObject.ResetMoveSpeed();
         AudioManager.Instance.SetBGMSpeed(1f, 0.2f);
     }
 
