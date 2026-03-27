@@ -12,8 +12,7 @@ public class PrivacyActivity extends Activity implements DialogInterface.OnClick
 
    // 隐私协议内容
    final String privacyContext =
-             "欢迎使用本游戏，在使用本游戏前，请您充分阅读并理解 <a href=\"https://blog.csdn.net/czhenya\">" +
-             "《用户协议》</a>和<a href=\"https://blog.csdn.net/czhenya\">《隐私政策》</a>各条;\n" +
+     "欢迎使用本游戏，在使用本游戏前，请您充分阅读并理解<a href=\"https://docs.qq.com/pdf/DRE5qcEpQSWtiS0Fz\">《隐私政策》</a>各条;\n" +
      "1.保护用户隐私是本游戏的一项基本政策，本游戏不会泄露您的个人信息；\n" +
      "2.我们会根据您使用的具体功能需要，收集必要的用户信息（如申请设备信息，存储等相关权限）；\n" +
      "3.在您同意App隐私政策后，我们将进行集成SDK的初始化工作，会收集您的android_id、Mac地址、IMEI和应用安装列表，以保障App正常数据统计和安全风控；\n" +
