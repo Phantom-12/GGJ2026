@@ -36,7 +36,12 @@ public class PrivacyActivity extends Activity implements DialogInterface.OnClick
     // 显示隐私协议对话框
     private void ShowPrivacyDialog(){
         WebView webView = new WebView(this);
-        webView.loadData(privacyContext, "text/html", "utf-8");         
+        String htmlContent =
+            "<html><head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" /></head>" +
+            "<body style=\"white-space: pre-wrap; word-break: break-word; line-height: 1.5;\">" +
+            privacyContext +
+            "</body></html>";
+        webView.loadDataWithBaseURL(null, htmlContent, "text/html", "utf-8", null);
         AlertDialog.Builder privacyDialog = new AlertDialog.Builder(this);
         privacyDialog.setCancelable(false);
         privacyDialog.setView(webView);
