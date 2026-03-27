@@ -58,8 +58,8 @@ MonoBehaviour:
   particlePutDown: {fileID: 113315891824553932}
   particlePutDownPerfect: {fileID: 6714226405982373013}
   scoreCfg: {fileID: 11400000, guid: 6a1a4db6b377b944894b67a70f31ae68, type: 2}
-  moveDuration: 4
-  radius: 1
+  minRadius: 0.3
+  maxRadius: 1
   putDownShowDuration: 0.6
   limitAngle: 60
 --- !u!1 &406778735152013503

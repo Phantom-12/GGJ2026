@@ -18,7 +18,7 @@ public class OperableObject : MonoBehaviour
         PutDown,
     }
 
-    [Header("引用")] [SerializeField] private Transform reference;
+    [Header("引用")][SerializeField] private Transform reference;
     [SerializeField] private Transform targetProxy;
     [SerializeField] private Transform target;
     [SerializeField] private Transform targetShower;
@@ -30,8 +30,9 @@ public class OperableObject : MonoBehaviour
     [SerializeField] private ParticleSystem particlePutDown;
     [SerializeField] private ParticleSystem particlePutDownPerfect;
 
-    [Header("配置")] [SerializeField] private Distance2Score scoreCfg;
-    [SerializeField] private float radius = 2f;
+    [Header("配置")][SerializeField] private Distance2Score scoreCfg;
+    [Min(0f)][SerializeField] private float minRadius = 0f;
+    [Min(0f)][SerializeField] private float maxRadius = 1f;
     [SerializeField] private float putDownShowDuration = 2f;
     [SerializeField] private float limitAngle = 60;
 
@@ -89,7 +90,7 @@ public class OperableObject : MonoBehaviour
         gameObject.SetActive(true);
         _state = State.Moving;
         targetProxy.localScale = Vector3.zero;
-        targetProxy.position = RandomCirclePoint(reference.position, radius);
+        targetProxy.position = RandomCirclePoint(reference.position, minRadius, maxRadius);
         particleAppear.Play();
         targetProxy.DOScale(Vector2.one, 0.2f).SetEase(Ease.OutBack);
         // target.DOShakePosition(10f, 0.1f, 10, 90, false, false).SetLoops(-1);
@@ -177,9 +178,20 @@ public class OperableObject : MonoBehaviour
         return (1, scoreCfg.data[0].score);
     }
 
-    private Vector2 RandomCirclePoint(Vector2 center, float radius)
+    private Vector2 RandomCirclePoint(Vector2 center, float minRadius, float maxRadius)
     {
-        return Random.insideUnitCircle * radius + center;
+        minRadius = Mathf.Max(0f, minRadius);
+        maxRadius = Mathf.Max(minRadius, maxRadius);
+
+        var direction = Random.insideUnitCircle;
+        if (direction == Vector2.zero)
+        {
+            direction = Vector2.right;
+        }
+        direction.Normalize();
+
+        var distance = Mathf.Sqrt(Random.Range(minRadius * minRadius, maxRadius * maxRadius));
+        return center + direction * distance;
     }
 
     private async UniTaskVoid StartMove()
@@ -229,7 +241,7 @@ public class OperableObject : MonoBehaviour
         AnimationCurve curve = new AnimationCurve(keyframes);
 
         // 计算随机位置，大于指定角度则重新选取
-        var randomPos = RandomCirclePoint(reference.position, radius);
+        var randomPos = RandomCirclePoint(reference.position, minRadius, maxRadius);
         for (var i = 0; i < 10000; i++)
         {
             var curPos = (Vector2)targetProxy.position;
@@ -242,11 +254,14 @@ public class OperableObject : MonoBehaviour
                 break;
             }
 
-            randomPos = RandomCirclePoint(reference.position, radius);
+            randomPos = RandomCirclePoint(reference.position, minRadius, maxRadius);
         }
 
         Vector3[] points = { reference.position, randomPos };
-        await targetProxy.DOPath(points, moveDuration, PathType.CatmullRom).SetEase(curve).SetId("Move")
+        await targetProxy.DOPath(points, 1, PathType.CatmullRom)
+            .SetSpeedBased(true)
+            .SetEase(curve)
+            .SetId("Move")
             .AsyncWaitForCompletion();
     }
 
