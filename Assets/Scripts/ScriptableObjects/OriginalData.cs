@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class OriginalData : ScriptableObject
 {
     [Header("初始的移动速度")]
-    public float startMoveDuration = 4f;
+    public float startMoveSpeed = 4f;
     [Header("游戏限时")]
     public int totalTime = 90;
 }

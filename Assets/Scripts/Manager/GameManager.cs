@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour
                 break;
         }
         totalTime = originalData.totalTime;
-        operableObject.SetDefaultMoveSpeed(originalData.startMoveDuration);
+        operableObject.SetDefaultMoveSpeed(originalData.startMoveSpeed);
     }
 
     public int GetScore()
