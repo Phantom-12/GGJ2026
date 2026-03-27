@@ -20,8 +20,8 @@ MonoBehaviour:
   - ratingLevel: 2
     score: 1500
   - ratingLevel: 3
-    score: 1800
+    score: 1650
   - ratingLevel: 4
-    score: 2000
+    score: 1800
   - ratingLevel: 5
-    score: 2100
+    score: 1900

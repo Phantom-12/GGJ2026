@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data:
   - distance: 10000
-    score: 10
+    score: 0
   - distance: 0.4
     score: 30
   - distance: 0.1

@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94e4a49fdecd443ddb7c03cd0c54f92e, type: 3}
   m_Name: OriginalParams
   m_EditorClassIdentifier: 
-  startMoveDuration: 1.5
+  startMoveSpeed: 1.5
   totalTime: 150
