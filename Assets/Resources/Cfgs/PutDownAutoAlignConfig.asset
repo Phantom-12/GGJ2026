@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c00b36d8eff4c4db10f7a07e319b1a8, type: 3}
   m_Name: PutDownAutoAlignConfig
   m_EditorClassIdentifier: 
-  autoAlignDistance: 0.03
+  autoAlignDistance: 0.1
