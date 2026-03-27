@@ -164,6 +164,7 @@ public class GameManager : MonoBehaviour
         }
 
         AudioManager.Instance.StopBGM();
+        Debug.Log($"Game over. Final score: {GetScore()}");
     }
 
     public void StartFirstRound()
@@ -307,6 +308,7 @@ public class GameManager : MonoBehaviour
         }
 
         int finalScore = Mathf.RoundToInt(curScore * multiple);
+        AddScore(finalScore);
         AnimationManager.Instance.ScoreAdditionAnimation(finalScore);
         AnimationManager.Instance.ChangeCatMood(level);
         AnimationManager.Instance.ShowBubble(level);

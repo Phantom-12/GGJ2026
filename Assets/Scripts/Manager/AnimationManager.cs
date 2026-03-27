@@ -76,8 +76,6 @@ public class AnimationManager : MonoBehaviour
             canvasGroup.alpha -= Time.deltaTime * 2f;
             yield return null;
         }
-
-        GameManager.Instance.AddScore(addition);
     }
 
     public void StartGameAnimation()
