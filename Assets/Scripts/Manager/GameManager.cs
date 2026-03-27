@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     private Combo2Multiple combo2Multiple;
     private Rating2Score rating2Score;
     private OriginalData originalData;
+    private PutDownAutoAlignConfig putDownAutoAlignConfig;
     public bool canPutDown = true;
     int time = 0, comboCount = 0;
     private System.Threading.CancellationTokenSource _putDownCts;
@@ -50,6 +51,8 @@ public class GameManager : MonoBehaviour
 
     public void LoadDifficultyCfg()
     {
+        putDownAutoAlignConfig = Resources.Load<PutDownAutoAlignConfig>("Cfgs/PutDownAutoAlignConfig");
+
         switch (difficultyLevel)
         {
             case 1:
@@ -70,6 +73,7 @@ public class GameManager : MonoBehaviour
         }
         totalTime = originalData.totalTime;
         operableObject.SetDefaultMoveSpeed(originalData.startMoveSpeed);
+        operableObject.SetPutDownAutoAlignConfig(putDownAutoAlignConfig);
     }
 
     public int GetScore()

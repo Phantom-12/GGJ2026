@@ -35,6 +35,7 @@ public class OperableObject : MonoBehaviour
     [Min(0f)][SerializeField] private float maxRadius = 1f;
     [SerializeField] private float putDownShowDuration = 2f;
     [SerializeField] private float limitAngle = 60;
+    private PutDownAutoAlignConfig _putDownAutoAlignConfig;
 
     private float _moveSpeedDefault, moveSpeed = 1;
     private State _state = State.BeforeAppear;
@@ -70,6 +71,11 @@ public class OperableObject : MonoBehaviour
     public void ResetMoveSpeed()
     {
         moveSpeed = _moveSpeedDefault;
+    }
+
+    public void SetPutDownAutoAlignConfig(PutDownAutoAlignConfig config)
+    {
+        _putDownAutoAlignConfig = config;
     }
 
     // 出现效果
@@ -109,6 +115,7 @@ public class OperableObject : MonoBehaviour
 
         _state = State.PutDown;
         StopMove();
+        TryAutoAlignOnPutDown();
 
         // 粒子
         particlePutDown.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
@@ -176,6 +183,21 @@ public class OperableObject : MonoBehaviour
         }
 
         return (1, scoreCfg.data[0].score);
+    }
+
+    private void TryAutoAlignOnPutDown()
+    {
+        if (_putDownAutoAlignConfig == null)
+        {
+            return;
+        }
+
+        if (CalcDistance() > _putDownAutoAlignConfig.autoAlignDistance)
+        {
+            return;
+        }
+
+        targetProxy.position = reference.position;
     }
 
     private Vector2 RandomCirclePoint(Vector2 center, float minRadius, float maxRadius)
