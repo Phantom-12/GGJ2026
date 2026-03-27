@@ -258,7 +258,7 @@ public class OperableObject : MonoBehaviour
         }
 
         Vector3[] points = { reference.position, randomPos };
-        await targetProxy.DOPath(points, 1, PathType.CatmullRom)
+        await targetProxy.DOPath(points, moveSpeed, PathType.CatmullRom)
             .SetSpeedBased(true)
             .SetEase(curve)
             .SetId("Move")
