@@ -1,96 +1,49 @@
-using System;
-using System.Threading;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UnityEngine.Video;
 
-[RequireComponent(typeof(VideoPlayer))]
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(Image))]
 public class StartScene : MonoBehaviour
 {
-    [SerializeField] private VideoPlayer videoPlayer;
-    [SerializeField] private Animator fallbackAnimator;
-    [SerializeField] private Image fallbackImage;
-    [SerializeField] private AspectRatioFitter fallbackAspectFitter;
+    [SerializeField] private Animator introAnimator;
+    [SerializeField] private Image introImage;
+    [SerializeField] private AspectRatioFitter introAspectFitter;
+    [SerializeField] private AudioClip introSfx1;
+    [SerializeField] private AudioClip introSfx2;
+    [SerializeField] [Range(0f, 1f)] private float introSfxVolume = 1f;
     [SerializeField] private string nextSceneName = "MainScene";
-    [SerializeField] private float prepareTimeoutSeconds = 3f;
 
     private bool _isLoading;
-    private bool _isFallbackPlaying;
-    private CancellationTokenSource _prepareCts;
 
     private void Reset()
     {
-        videoPlayer = GetComponent<VideoPlayer>();
-        fallbackAnimator = GetComponent<Animator>();
-        fallbackImage = GetComponent<Image>();
-        fallbackAspectFitter = GetComponent<AspectRatioFitter>();
+        introAnimator = GetComponent<Animator>();
+        introImage = GetComponent<Image>();
+        introAspectFitter = GetComponent<AspectRatioFitter>();
     }
 
     private void Awake()
     {
-        if (videoPlayer == null)
+        if (introAnimator == null)
         {
-            videoPlayer = GetComponent<VideoPlayer>();
+            introAnimator = GetComponent<Animator>();
         }
 
-        if (fallbackAnimator == null)
+        if (introImage == null)
         {
-            fallbackAnimator = GetComponent<Animator>();
+            introImage = GetComponent<Image>();
         }
 
-        if (fallbackImage == null)
+        if (introAspectFitter == null)
         {
-            fallbackImage = GetComponent<Image>();
-        }
-
-        if (fallbackAspectFitter == null)
-        {
-            fallbackAspectFitter = GetComponent<AspectRatioFitter>();
-        }
-
-        ShowFallbackBackground();
-    }
-
-    private void OnEnable()
-    {
-        if (videoPlayer != null)
-        {
-            videoPlayer.loopPointReached += OnVideoFinished;
-            videoPlayer.errorReceived += OnVideoErrorReceived;
-        }
-    }
-
-    private void OnDisable()
-    {
-        CancelPrepareTask();
-
-        if (videoPlayer != null)
-        {
-            videoPlayer.loopPointReached -= OnVideoFinished;
-            videoPlayer.errorReceived -= OnVideoErrorReceived;
+            introAspectFitter = GetComponent<AspectRatioFitter>();
         }
     }
 
     private void Start()
     {
-        if (videoPlayer == null)
-        {
-            PlayFallbackAnimation();
-            return;
-        }
-
-        if (videoPlayer.clip == null && string.IsNullOrWhiteSpace(videoPlayer.url))
-        {
-            Debug.LogWarning("StartScene VideoPlayer has no clip or url. Playing fallback intro animation.");
-            PlayFallbackAnimation();
-            return;
-        }
-
-        CancelPrepareTask();
-        _prepareCts = CancellationTokenSource.CreateLinkedTokenSource(this.GetCancellationTokenOnDestroy());
-        PrepareAndPlayAsync(_prepareCts.Token).Forget();
+        PlayIntroAnimation();
     }
 
     public void OnLogoFinish()
@@ -98,155 +51,67 @@ public class StartScene : MonoBehaviour
         LoadMainScene();
     }
 
-    private void OnVideoFinished(VideoPlayer source)
+    public void PlayIntroSfx1()
     {
-        CancelPrepareTask();
-
-        long lastFrame = (long)source.frameCount - 1;
-        if (lastFrame >= 0)
-        {
-            source.frame = lastFrame;
-        }
-        source.Pause();
-        LoadMainScene();
+        PlayIntroSfx(introSfx1);
     }
 
-    private void OnVideoErrorReceived(VideoPlayer source, string message)
+    public void PlayIntroSfx2()
     {
-        Debug.LogWarning($"Intro video failed: {message}. Playing fallback intro animation.");
-        CancelPrepareTask();
-        PlayFallbackAnimation();
+        PlayIntroSfx(introSfx2);
     }
 
-    private async UniTaskVoid PrepareAndPlayAsync(CancellationToken ct)
+    private void PlayIntroAnimation()
     {
-        try
+        if (introAnimator == null || introImage == null)
         {
-            videoPlayer.Prepare();
-
-            int completedTaskIndex = await UniTask.WhenAny(
-                UniTask.WaitUntil(
-                    () => _isLoading || videoPlayer == null || videoPlayer.isPrepared || videoPlayer.isPlaying,
-                    cancellationToken: ct),
-                UniTask.Delay(TimeSpan.FromSeconds(prepareTimeoutSeconds), cancellationToken: ct));
-
-            if (completedTaskIndex == 1)
-            {
-                if (!_isLoading && videoPlayer != null && !videoPlayer.isPrepared && !videoPlayer.isPlaying)
-                {
-                    Debug.LogWarning($"Intro video prepare timed out after {prepareTimeoutSeconds:0.##} seconds. Playing fallback intro animation.");
-                    PlayFallbackAnimation();
-                }
-
-                return;
-            }
-
-            if (_isLoading || videoPlayer == null || videoPlayer.isPlaying)
-            {
-                return;
-            }
-
-            HideFallbackVisual();
-            videoPlayer.Play();
-        }
-        catch (OperationCanceledException)
-        {
-        }
-    }
-
-    private void PlayFallbackAnimation()
-    {
-        if (_isLoading || _isFallbackPlaying)
-        {
-            return;
-        }
-
-        if (fallbackAnimator == null || fallbackImage == null)
-        {
-            Debug.LogWarning("Fallback intro animation is not configured. Skipping to main scene.");
+            Debug.LogWarning("StartScene intro animation is not configured. Skipping to main scene.");
             LoadMainScene();
             return;
         }
 
-        CancelPrepareTask();
-        _isFallbackPlaying = true;
+        introImage.enabled = true;
+        ConfigureIntroLayout();
 
-        if (videoPlayer != null)
-        {
-            videoPlayer.Stop();
-            videoPlayer.enabled = false;
-        }
-
-        ShowFallbackBackground();
-        fallbackAnimator.enabled = true;
-        fallbackAnimator.Rebind();
-        fallbackAnimator.Play(0, 0, 0f);
-        fallbackAnimator.Update(0f);
-        ConfigureFallbackLayout();
+        introAnimator.enabled = true;
+        introAnimator.Rebind();
+        introAnimator.Play(0, 0, 0f);
+        introAnimator.Update(0f);
     }
 
-    private void ConfigureFallbackLayout()
+    private void PlayIntroSfx(AudioClip clip)
     {
-        if (fallbackImage == null)
+        if (clip == null)
         {
             return;
         }
 
-        fallbackImage.preserveAspect = true;
+        Vector3 playPosition = Camera.main != null ? Camera.main.transform.position : transform.position;
+        AudioSource.PlayClipAtPoint(clip, playPosition, Mathf.Clamp01(introSfxVolume));
+    }
 
-        if (fallbackAspectFitter == null || fallbackImage.sprite == null)
+    private void ConfigureIntroLayout()
+    {
+        if (introImage == null)
         {
             return;
         }
 
-        Rect spriteRect = fallbackImage.sprite.rect;
+        introImage.preserveAspect = true;
+
+        if (introAspectFitter == null || introImage.sprite == null)
+        {
+            return;
+        }
+
+        Rect spriteRect = introImage.sprite.rect;
         if (spriteRect.height <= 0f)
         {
             return;
         }
 
-        fallbackAspectFitter.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
-        fallbackAspectFitter.aspectRatio = spriteRect.width / spriteRect.height;
-    }
-
-    private void ShowFallbackBackground()
-    {
-        if (fallbackImage == null)
-        {
-            return;
-        }
-
-        if (fallbackAnimator != null)
-        {
-            fallbackAnimator.enabled = true;
-            fallbackAnimator.Rebind();
-            fallbackAnimator.Play(0, 0, 0f);
-            fallbackAnimator.Update(0f);
-            fallbackAnimator.enabled = false;
-        }
-
-        fallbackImage.enabled = true;
-        ConfigureFallbackLayout();
-    }
-
-    private void HideFallbackVisual()
-    {
-        if (fallbackImage != null)
-        {
-            fallbackImage.enabled = false;
-        }
-
-        if (fallbackAnimator != null)
-        {
-            fallbackAnimator.enabled = false;
-        }
-    }
-
-    private void CancelPrepareTask()
-    {
-        _prepareCts?.Cancel();
-        _prepareCts?.Dispose();
-        _prepareCts = null;
+        introAspectFitter.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
+        introAspectFitter.aspectRatio = spriteRect.width / spriteRect.height;
     }
 
     private void LoadMainScene()
